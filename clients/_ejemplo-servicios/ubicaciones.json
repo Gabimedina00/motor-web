@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/ubicaciones.schema.json",
+  "ubicaciones": [
+    {
+      "id": "estudio", "nombre": "Estudio", "direccion": "Calle Ejemplo 456", "ciudad": "Resistencia, Chaco",
+      "horarios": [
+        { "dias": ["mar", "mie", "jue", "vie"], "abre": "10:00", "cierra": "19:00" },
+        { "dias": ["sab"], "abre": "10:00", "cierra": "14:00" }
+      ]
+    }
+  ]
+}

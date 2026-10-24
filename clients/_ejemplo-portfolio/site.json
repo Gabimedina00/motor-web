@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/site.schema.json",
+  "nombre": "Raíz Paisajismo",
+  "rubro": "Diseño de interiores con plantas",
+  "tema": "portfolio",
+  "descripcion": "Diseñamos rincones verdes para casas, oficinas y locales. Mirá nuestros trabajos y escribinos para presupuestar.",
+  "url": "https://ejemplo-portfolio.motor-web.pages.dev",
+  "hero": {
+    "titulo": "Rincones verdes para espacios reales",
+    "bajada": "Elegimos las plantas según tu luz, tu tiempo y tu espacio.",
+    "foto": "hero.jpg",
+    "alt": "Estante con monstera, sansevieria y potus"
+  },
+  "marca": {
+    "tokens": { "brand": "#3b4a2f", "brandStrong": "#27321f", "ink": "#1c1f1a", "muted": "#5f6659", "surfaceAlt": "#eceee6", "accent": "#c9d6a3", "accentInk": "#1c1f1a", "radiusCard": "4px", "radiusButton": "4px" },
+    "fuentes": { "display": "Fraunces", "texto": "Inter" }
+  },
+  "contacto": { "whatsapp": "5493624000002", "email": "hola@ejemplo.com", "instagram": "https://www.instagram.com/" },
+  "galeria": [
+    { "foto": "monstera.jpg", "alt": "Monstera junto a una ventana" },
+    { "foto": "sansevieria.jpg", "alt": "Sansevieria en maceta negra" },
+    { "foto": "suculentas.jpg", "alt": "Seis suculentas para un escritorio" },
+    { "foto": "cactus.jpg", "alt": "Cactus con flor" },
+    { "foto": "macetas.jpg", "alt": "Macetas de barro de tres tamaños" },
+    { "foto": "potus.jpg", "alt": "Potus colgante" }
+  ],
+  "testimonios": [
+    { "nombre": "Café Ejemplo", "texto": "Nos armaron el salón entero y las plantas siguen perfectas." },
+    { "nombre": "Martín", "texto": "Me explicaron cómo cuidarlas, cosa que nadie hace." }
+  ]
+}

@@ -6,4 +6,4 @@
 - Acciones que resuelve: ver el catálogo con precios, armar un pedido y enviarlo por WhatsApp, pedir turno, contactar, ver ubicación y horarios.
 - Cliente incluido: solo `_ejemplo`, ficticio, para probar y copiar. Ningún cliente real queda fijo en el motor.
 - Fuera de alcance v1: pagos online, panel admin, cuentas de usuario.
-- Próximo paso después del motor: Cromo Insumos como primer cliente real, en su propio hilo.
+- Próximo paso después del motor: Cromo Insumos como primer cliente real.

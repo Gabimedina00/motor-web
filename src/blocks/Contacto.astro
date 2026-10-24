@@ -1,0 +1,37 @@
+---
+import { site } from '../lib/cliente';
+import { linkWhatsApp } from '../lib/whatsapp';
+const c = site.contacto;
+---
+
+<section id="contacto" class="seccion contacto" aria-labelledby="contacto-titulo">
+  <div class="contenedor contacto__caja">
+    <div>
+      <h2 id="contacto-titulo">¿Tenés una consulta?</h2>
+      <p>Escribinos por WhatsApp y te respondemos en el día.</p>
+    </div>
+    <div class="contacto__acciones">
+      <a class="boton contacto__wa" href={linkWhatsApp(c.whatsapp, `Hola ${site.nombre}! Tengo una consulta.`)} target="_blank" rel="noopener">
+        Escribir por WhatsApp
+      </a>
+      {c.telefono && <a class="contacto__link" href={`tel:${c.telefono.replace(/\s/g, '')}`}>Llamar al {c.telefono}</a>}
+      {c.email && <a class="contacto__link" href={`mailto:${c.email}`}>{c.email}</a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .contacto__caja {
+    display: grid; gap: var(--s5); align-items: center;
+    padding: var(--s6); border-radius: calc(var(--radius-card) * 2);
+    background: var(--brand); color: #fff;
+  }
+  @media (min-width: 760px) { .contacto__caja { grid-template-columns: 1fr auto; padding: var(--s7); } }
+  .contacto__caja h2 { color: #fff; }
+  .contacto__caja p { margin-top: var(--s2); opacity: 0.9; font-size: var(--t-m); }
+  .contacto__acciones { display: grid; gap: var(--s3); justify-items: start; }
+  .contacto__wa { background: #fff; border-color: #fff; color: var(--brand-strong); }
+  .contacto__wa:hover { background: var(--surface-alt); border-color: var(--surface-alt); color: var(--brand-strong); }
+  .contacto__link { color: #fff; }
+  .contacto :global(:focus-visible) { outline-color: #fff; }
+</style>

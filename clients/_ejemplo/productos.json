@@ -1,0 +1,85 @@
+{
+  "$schema": "../../schemas/productos.schema.json",
+  "categorias": [
+    { "id": "interior", "nombre": "Plantas de interior" },
+    { "id": "suculentas", "nombre": "Suculentas y cactus" },
+    { "id": "macetas", "nombre": "Macetas" },
+    { "id": "sustratos", "nombre": "Sustratos" },
+    { "id": "combos", "nombre": "Combos" }
+  ],
+  "productos": [
+    {
+      "id": "potus", "nombre": "Potus", "categoria": "interior",
+      "descripcion": "Colgante y muy resistente. Va bien con luz indirecta y riego una vez por semana.",
+      "foto": "potus.jpg", "alt": "Potus con guías colgantes en maceta de barro",
+      "variantes": [{ "nombre": "Maceta 14 cm", "precio": 6500 }]
+    },
+    {
+      "id": "monstera", "nombre": "Monstera deliciosa", "categoria": "interior",
+      "descripcion": "Hojas grandes con cortes. Necesita espacio y buena luz sin sol directo.",
+      "foto": "monstera.jpg", "alt": "Monstera con cuatro hojas grandes en maceta clara",
+      "variantes": [{ "nombre": "Maceta 17 cm", "precio": 14500 }, { "nombre": "Maceta 24 cm", "precio": 26000 }]
+    },
+    {
+      "id": "sansevieria", "nombre": "Sansevieria", "categoria": "interior",
+      "descripcion": "La más fácil de cuidar: aguanta poca luz y se riega cada 15 días.",
+      "foto": "sansevieria.jpg", "alt": "Sansevieria de hojas largas en maceta negra",
+      "variantes": [{ "nombre": "Maceta 17 cm", "precio": 9800 }]
+    },
+    {
+      "id": "suculentas-surtidas", "nombre": "Suculentas surtidas", "categoria": "suculentas",
+      "descripcion": "Variedades que cambian según la temporada. Ideales para escritorio o balcón.",
+      "foto": "suculentas.jpg", "alt": "Seis suculentas de colores en macetas chicas", "etiqueta": "Por cantidad",
+      "variantes": [
+        { "nombre": "Unidad", "precio": 1800 },
+        { "nombre": "Bandeja x 6", "precio": 9500 },
+        { "nombre": "Bandeja x 12", "precio": 17000 }
+      ]
+    },
+    {
+      "id": "cactus", "nombre": "Cactus", "categoria": "suculentas",
+      "descripcion": "Pide sol y casi nada de riego.",
+      "foto": "cactus.jpg", "alt": "Cactus con dos brazos y una flor rosa",
+      "variantes": [{ "nombre": "Unidad", "precio": 2400 }]
+    },
+    {
+      "id": "maceta-barro", "nombre": "Maceta de barro", "categoria": "macetas",
+      "descripcion": "Barro cocido con agujero de drenaje.",
+      "foto": "macetas.jpg", "alt": "Tres macetas de barro de distintos tamaños",
+      "variantes": [
+        { "nombre": "12 cm", "precio": 2200 },
+        { "nombre": "17 cm", "precio": 3600 },
+        { "nombre": "24 cm", "precio": 6400 }
+      ]
+    },
+    {
+      "id": "maceta-cemento", "nombre": "Maceta de cemento pintada", "categoria": "macetas",
+      "descripcion": "Hecha a mano, pintada en colores pastel.",
+      "disponible": false,
+      "variantes": [{ "nombre": "Unidad", "precio": 7800 }]
+    },
+    {
+      "id": "sustrato", "nombre": "Sustrato universal", "categoria": "sustratos",
+      "descripcion": "Mezcla lista para plantas de interior y exterior.",
+      "foto": "sustrato.jpg", "alt": "Bolsas de sustrato de 5 y 25 kilos",
+      "variantes": [{ "nombre": "Bolsa 5 kg", "precio": 4200 }, { "nombre": "Bulto 25 kg", "precio": 15500 }]
+    },
+    {
+      "id": "perlita", "nombre": "Perlita", "categoria": "sustratos",
+      "descripcion": "Mejora el drenaje. Mezclala con el sustrato para suculentas.",
+      "variantes": [{ "nombre": "Bolsa 5 dm³", "precio": 3900 }]
+    },
+    {
+      "id": "combo-primera-planta", "nombre": "Combo primera planta", "categoria": "combos",
+      "descripcion": "Potus, maceta de barro de 17 cm y sustrato de 5 kg.",
+      "foto": "combo-inicio.jpg", "alt": "Potus en maceta junto a una bolsa de sustrato", "etiqueta": "Combo",
+      "variantes": [{ "nombre": "Combo", "precio": 12500 }]
+    },
+    {
+      "id": "combo-suculentas", "nombre": "Combo suculentas", "categoria": "combos",
+      "descripcion": "Seis suculentas con sus macetas de 8 cm. Para regalar.",
+      "foto": "combo-suculentas.jpg", "alt": "Seis suculentas en macetas chicas", "etiqueta": "Combo",
+      "variantes": [{ "nombre": "Combo", "precio": 16500 }]
+    }
+  ]
+}

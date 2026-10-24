@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/ubicaciones.schema.json",
+  "ubicaciones": [
+    {
+      "id": "vivero",
+      "nombre": "Vivero",
+      "direccion": "Av. Ejemplo 1234",
+      "ciudad": "Resistencia, Chaco",
+      "mapa": "https://maps.google.com/?q=Resistencia+Chaco",
+      "telefono": "362 400 0000",
+      "horarios": [
+        { "dias": ["lun", "mar", "mie", "jue", "vie"], "abre": "08:30", "cierra": "12:30" },
+        { "dias": ["lun", "mar", "mie", "jue", "vie"], "abre": "16:30", "cierra": "20:30" },
+        { "dias": ["sab"], "abre": "09:00", "cierra": "13:00" }
+      ]
+    }
+  ],
+  "zonasEnvio": ["Resistencia", "Barranqueras", "Fontana", "Puerto Vilelas"]
+}

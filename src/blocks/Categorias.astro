@@ -1,0 +1,53 @@
+---
+import { productos } from '../lib/cliente';
+const categorias = (productos?.categorias ?? []).filter((c) =>
+  productos?.productos.some((p) => p.categoria === c.id),
+);
+---
+
+{categorias.length > 1 && (
+  <nav class="categorias" aria-label="Categorías del catálogo">
+    <ul class="contenedor categorias__lista">
+      {categorias.map((c) => <li><a href={`#cat-${c.id}`}>{c.nombre}</a></li>)}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .categorias {
+    position: sticky; top: var(--header-h); z-index: 15;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+  }
+  .categorias__lista {
+    display: flex; gap: var(--s2); overflow-x: auto; scrollbar-width: none;
+    list-style: none; margin-block: 0; padding: var(--s3) 0;
+  }
+  .categorias__lista::-webkit-scrollbar { display: none; }
+  .categorias a {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s4);
+    border: 1px solid var(--line); border-radius: 999px;
+    color: var(--ink); text-decoration: none; white-space: nowrap; font-weight: 500;
+  }
+  .categorias a:hover, .categorias a[aria-current='true'] {
+    background: var(--brand); border-color: var(--brand); color: #fff;
+  }
+</style>
+
+<script>
+  // Marca la categoría visible mientras se scrollea.
+  const enlaces = [...document.querySelectorAll<HTMLAnchorElement>('.categorias a')];
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        enlaces.forEach((a) => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
+        enlaces.find((a) => a.hash === `#${e.target.id}`)?.scrollIntoView({ block: 'nearest', inline: 'center' });
+      }
+    },
+    { rootMargin: '-40% 0px -55% 0px' },
+  );
+  enlaces.forEach((a) => {
+    const destino = document.querySelector(a.hash);
+    if (destino) observador.observe(destino);
+  });
+</script>

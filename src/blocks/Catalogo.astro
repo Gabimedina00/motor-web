@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import { site, productos, foto } from '../lib/cliente';
+import { bloquesDe } from '../themes';
+import { formatoPrecio } from '../lib/precio';
+
+const conCarrito = bloquesDe(site).includes('Carrito');
+const conTurno = bloquesDe(site).includes('Turno');
+const $ = (n: number) => formatoPrecio(n, site.moneda, site.idioma);
+const grupos = (productos?.categorias ?? [])
+  .map((c) => ({ ...c, items: productos!.productos.filter((p) => p.categoria === c.id) }))
+  .filter((c) => c.items.length);
+---
+
+<section id="catalogo" class="seccion catalogo" aria-labelledby="catalogo-titulo">
+  <div class="contenedor">
+    <h2 id="catalogo-titulo" class="solo-lectores">{site.tema === 'servicios' ? 'Servicios' : 'Catálogo'}</h2>
+    {grupos.map((g) => (
+      <section id={`cat-${g.id}`} class="catalogo__grupo" aria-labelledby={`tit-${g.id}`}>
+        <h2 id={`tit-${g.id}`} class="seccion__titulo">{g.nombre}</h2>
+        <ul class="catalogo__grilla">
+          {g.items.map((p) => (
+            <li class:list={['card', { 'card--sin-foto': !p.foto }]} data-producto={p.id}>
+              {p.foto && (
+                <Image class="card__foto" src={foto(p.foto)} alt={p.alt!} widths={[160, 320, 480]} sizes="(min-width: 600px) 320px, 104px" />
+              )}
+              <div class="card__cuerpo">
+                <div class="card__cabeza">
+                  <h3>{p.nombre}</h3>
+                  {p.etiqueta && <span class="badge">{p.etiqueta}</span>}
+                </div>
+                {p.descripcion && <p class="card__desc">{p.descripcion}</p>}
+                <div class="card__pie">
+                  {p.variantes.length === 1 ? (
+                    <p class="card__precio">
+                      {p.variantes[0].nombre !== 'Unidad' && <span class="card__variante">{p.variantes[0].nombre} </span>}
+                      {$(p.variantes[0].precio)}
+                    </p>
+                  ) : (
+                    <label class="card__selector">
+                      <span class="solo-lectores">Presentación de {p.nombre}</span>
+                      <select data-variante>
+                        {p.variantes.map((v, i) => <option value={i}>{v.nombre}: {$(v.precio)}</option>)}
+                      </select>
+                    </label>
+                  )}
+                  {!p.disponible ? (
+                    <span class="badge badge--cerrado">Sin stock</span>
+                  ) : conCarrito ? (
+                    <button
+                      class="boton boton--chico"
+                      type="button"
+                      data-agregar
+                      data-nombre={p.nombre}
+                      data-variantes={JSON.stringify(p.variantes)}
+                    >
+                      Agregar<span class="solo-lectores"> {p.nombre}</span>
+                    </button>
+                  ) : conTurno ? (
+                    <a class="boton boton--chico boton--secundario" href="#turno" data-elegir-servicio={p.nombre}>
+                      Pedir turno<span class="solo-lectores"> para {p.nombre}</span>
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</section>
+
+<style>
+  .catalogo { padding-top: var(--s6); }
+  .catalogo__grupo + .catalogo__grupo { margin-top: var(--s7); }
+  .catalogo__grilla { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+  @media (min-width: 600px) { .catalogo__grilla { grid-template-columns: repeat(2, 1fr); gap: var(--s5); } }
+  @media (min-width: 960px) { .catalogo__grilla { grid-template-columns: repeat(3, 1fr); } }
+
+  .card {
+    display: grid; grid-template-columns: 104px 1fr; gap: var(--s3);
+    padding: var(--s3); border: 1px solid var(--line); border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  @media (min-width: 600px) { .card { grid-template-columns: 1fr; padding: 0; overflow: hidden; } }
+  .card__foto {
+    width: 104px; height: 104px; object-fit: cover; border-radius: calc(var(--radius-card) - 4px);
+    background: var(--surface-alt);
+  }
+  @media (min-width: 600px) { .card__foto { width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 0; } }
+  .card--sin-foto { grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .card--sin-foto { padding-top: var(--s2); } }
+  .card__cuerpo { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+  @media (min-width: 600px) { .card__cuerpo { padding: var(--s4); flex: 1; } }
+  .card__cabeza { display: flex; align-items: start; justify-content: space-between; gap: var(--s2); }
+  .card h3 { font-size: var(--t-m); }
+  .card__desc {
+    color: var(--muted); font-size: var(--t-s);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card__pie { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; margin-top: auto; }
+  .card__precio { font-weight: 700; font-size: var(--t-m); color: var(--ink); }
+  .card__variante { font-weight: 500; font-size: var(--t-s); color: var(--muted); }
+  .card__selector select {
+    min-height: 40px; max-width: 100%; padding: 0 var(--s2);
+    border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 8px;
+    background: var(--surface); color: var(--ink); font: 600 var(--t-s) var(--font-text);
+  }
+</style>

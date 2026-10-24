@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "nombre": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rubro": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tema": {
+      "type": "string",
+      "enum": [
+        "tienda",
+        "servicios",
+        "portfolio"
+      ]
+    },
+    "descripcion": {
+      "type": "string",
+      "minLength": 20
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "idioma": {
+      "default": "es-AR",
+      "type": "string"
+    },
+    "moneda": {
+      "default": "ARS",
+      "type": "string"
+    },
+    "zonaHoraria": {
+      "default": "America/Argentina/Buenos_Aires",
+      "type": "string"
+    },
+    "hero": {
+      "type": "object",
+      "properties": {
+        "titulo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bajada": {
+          "type": "string",
+          "minLength": 1
+        },
+        "foto": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "titulo",
+        "bajada"
+      ]
+    },
+    "marca": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "logo": {
+          "type": "object",
+          "properties": {
+            "foto": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "foto",
+            "alt"
+          ]
+        },
+        "tokens": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "brand": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "brandStrong": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "ink": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "muted": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "surfaceAlt": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "accent": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "accentInk": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "radiusCard": {
+              "type": "string"
+            },
+            "radiusButton": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "fuentes": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "display": {
+              "default": "Inter",
+              "type": "string",
+              "enum": [
+                "Inter",
+                "Bricolage Grotesque",
+                "Fraunces"
+              ]
+            },
+            "texto": {
+              "default": "Inter",
+              "type": "string",
+              "enum": [
+                "Inter",
+                "Bricolage Grotesque",
+                "Fraunces"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "contacto": {
+      "type": "object",
+      "properties": {
+        "whatsapp": {
+          "type": "string",
+          "pattern": "^\\d{10,15}$"
+        },
+        "telefono": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        },
+        "instagram": {
+          "type": "string",
+          "format": "uri"
+        },
+        "facebook": {
+          "type": "string",
+          "format": "uri"
+        },
+        "tiktok": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "whatsapp"
+      ]
+    },
+    "pedidos": {
+      "type": "object",
+      "properties": {
+        "mediosDePago": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "envio": {
+          "default": true,
+          "type": "boolean"
+        },
+        "retiro": {
+          "default": true,
+          "type": "boolean"
+        },
+        "avisoEnvio": {
+          "type": "string"
+        },
+        "pagoConEnvio": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "mediosDePago"
+      ]
+    },
+    "bloques": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Header",
+          "Hero",
+          "Categorias",
+          "Catalogo",
+          "Carrito",
+          "Turno",
+          "Galeria",
+          "Nosotros",
+          "Testimonios",
+          "Ubicaciones",
+          "FAQ",
+          "Contacto",
+          "Footer"
+        ]
+      }
+    },
+    "galeria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "foto": {
+            "type": "string",
+            "minLength": 1
+          },
+          "alt": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "foto",
+          "alt"
+        ]
+      }
+    },
+    "testimonios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "texto": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nombre",
+          "texto"
+        ]
+      }
+    },
+    "faq": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pregunta": {
+            "type": "string"
+          },
+          "respuesta": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pregunta",
+          "respuesta"
+        ]
+      }
+    }
+  },
+  "required": [
+    "nombre",
+    "rubro",
+    "tema",
+    "descripcion",
+    "url",
+    "hero",
+    "contacto"
+  ],
+  "additionalProperties": false
+}

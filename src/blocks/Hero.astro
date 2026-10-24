@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import { site, foto } from '../lib/cliente';
+import { bloquesDe } from '../themes';
+import { linkWhatsApp } from '../lib/whatsapp';
+
+const activos = bloquesDe(site);
+const principal = activos.includes('Catalogo')
+  ? { href: '#catalogo', texto: site.tema === 'servicios' ? 'Ver servicios' : 'Ver catálogo' }
+  : activos.includes('Galeria')
+    ? { href: '#galeria', texto: 'Ver trabajos' }
+    : undefined;
+---
+
+<section class="hero">
+  <div class="contenedor hero__grilla">
+    <div class="hero__texto">
+      <h1>{site.hero.titulo}</h1>
+      <p class="hero__bajada">{site.hero.bajada}</p>
+      <div class="hero__acciones">
+        {principal && <a class="boton" href={principal.href}>{principal.texto}</a>}
+        <a class="boton boton--secundario" href={linkWhatsApp(site.contacto.whatsapp)} target="_blank" rel="noopener">
+          Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+    {site.hero.foto && (
+      <Image
+        class="hero__foto"
+        src={foto(site.hero.foto)}
+        alt={site.hero.alt ?? ''}
+        widths={[480, 800, 1100]}
+        sizes="(min-width: 960px) 540px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )}
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: var(--s6) var(--s7); }
+  .hero__grilla { display: grid; gap: var(--s6); align-items: center; }
+  @media (min-width: 960px) { .hero__grilla { grid-template-columns: 1.1fr 1fr; gap: var(--s7); } }
+  .hero h1 {
+    font-size: clamp(40px, 9vw, 76px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+  }
+  .hero__bajada { margin-top: var(--s4); font-size: var(--t-m); color: var(--muted); max-width: 44ch; }
+  .hero__acciones { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s5); }
+  .hero__foto {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+    border-radius: calc(var(--radius-card) * 2);
+  }
+</style>

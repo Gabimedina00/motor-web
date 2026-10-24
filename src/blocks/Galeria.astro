@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import { site, foto } from '../lib/cliente';
+const items = site.galeria ?? [];
+---
+
+{items.length > 0 && (
+  <section id="galeria" class="seccion" aria-labelledby="galeria-titulo">
+    <div class="contenedor">
+      <h2 id="galeria-titulo" class="seccion__titulo">Trabajos</h2>
+      <ul class="galeria">
+        {items.map((g) => (
+          <li><Image src={foto(g.foto)} alt={g.alt} widths={[400, 800]} sizes="(min-width: 960px) 360px, 50vw" /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .galeria { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: var(--s3); }
+  @media (min-width: 960px) { .galeria { columns: 3; column-gap: var(--s4); } }
+  .galeria li { break-inside: avoid; margin-bottom: var(--s3); }
+  .galeria :global(img) { width: 100%; border-radius: var(--radius-card); }
+</style>

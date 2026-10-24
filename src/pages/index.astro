@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/cliente';
+import { bloquesDe } from '../themes';
+import type { NombreBloque } from '../schemas/site';
+
+import Header from '../blocks/Header.astro';
+import Hero from '../blocks/Hero.astro';
+import Categorias from '../blocks/Categorias.astro';
+import Catalogo from '../blocks/Catalogo.astro';
+import Carrito from '../blocks/Carrito.astro';
+import Turno from '../blocks/Turno.astro';
+import Galeria from '../blocks/Galeria.astro';
+import Nosotros from '../blocks/Nosotros.astro';
+import Testimonios from '../blocks/Testimonios.astro';
+import Ubicaciones from '../blocks/Ubicaciones.astro';
+import FAQ from '../blocks/FAQ.astro';
+import Contacto from '../blocks/Contacto.astro';
+import Footer from '../blocks/Footer.astro';
+
+const BLOQUES: Record<NombreBloque, (props: Record<string, unknown>) => unknown> = {
+  Header, Hero, Categorias, Catalogo, Carrito, Turno, Galeria, Nosotros, Testimonios, Ubicaciones, FAQ, Contacto, Footer,
+};
+
+const orden = bloquesDe(site);
+const arriba = orden.filter((b) => b === 'Header');
+const medio = orden.filter((b) => b !== 'Header' && b !== 'Footer' && b !== 'Carrito');
+const abajo = orden.filter((b) => b === 'Footer' || b === 'Carrito');
+---
+
+<Base>
+  {arriba.map((b) => { const Bloque = BLOQUES[b]; return <Bloque />; })}
+  <main id="contenido">
+    {medio.map((b) => { const Bloque = BLOQUES[b]; return <Bloque />; })}
+  </main>
+  {abajo.map((b) => { const Bloque = BLOQUES[b]; return <Bloque />; })}
+</Base>
