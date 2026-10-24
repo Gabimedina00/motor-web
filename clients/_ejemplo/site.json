@@ -34,7 +34,7 @@
     "mediosDePago": ["Transferencia", "Efectivo"],
     "envio": true,
     "retiro": true,
-    "avisoEnvio": "el costo del envío se cotiza según la distancia",
+    "avisoEnvio": "se cotiza según la distancia",
     "pagoConEnvio": ["Transferencia"]
   },
   "faq": [

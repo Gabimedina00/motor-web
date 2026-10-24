@@ -79,12 +79,13 @@ a { color: var(--brand-strong); }
 
 .campo { display: grid; gap: var(--s1); }
 .campo label, .campo legend { font-size: var(--t-s); font-weight: 600; }
-.campo input, .campo select, .campo textarea {
+.campo input:not([type='radio'], [type='checkbox']), .campo select, .campo textarea {
   min-height: 44px; padding: var(--s2) var(--s3);
   border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 8px;
   background: var(--surface); color: var(--ink); font: inherit;
 }
 .campo textarea { min-height: 72px; resize: vertical; }
+.campo input[type='radio'], .campo input[type='checkbox'] { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
 
 .solo-lectores {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
