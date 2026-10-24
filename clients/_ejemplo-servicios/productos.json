@@ -1,0 +1,13 @@
+{
+  "$schema": "../../schemas/productos.schema.json",
+  "categorias": [
+    { "id": "manos", "nombre": "Manos" },
+    { "id": "pestanas", "nombre": "Pestañas" }
+  ],
+  "productos": [
+    { "id": "semipermanente", "nombre": "Esmaltado semipermanente", "categoria": "manos", "descripcion": "Dura entre dos y tres semanas. Incluye limado y cutículas.", "variantes": [{ "nombre": "60 min", "precio": 9000 }] },
+    { "id": "kapping", "nombre": "Kapping", "categoria": "manos", "descripcion": "Refuerzo de gel sobre tu uña natural.", "variantes": [{ "nombre": "90 min", "precio": 12000 }] },
+    { "id": "lifting", "nombre": "Lifting de pestañas", "categoria": "pestanas", "descripcion": "Curva tus pestañas naturales por seis semanas.", "variantes": [{ "nombre": "60 min", "precio": 11000 }] },
+    { "id": "extensiones", "nombre": "Extensiones pelo a pelo", "categoria": "pestanas", "etiqueta": "Más pedido", "variantes": [{ "nombre": "Primera vez", "precio": 18000 }, { "nombre": "Service", "precio": 12000 }] }
+  ]
+}

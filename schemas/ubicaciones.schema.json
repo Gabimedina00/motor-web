@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "ubicaciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "mapa": {
+            "type": "string",
+            "format": "uri"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "horarios": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dias": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "lun",
+                      "mar",
+                      "mie",
+                      "jue",
+                      "vie",
+                      "sab",
+                      "dom"
+                    ]
+                  }
+                },
+                "abre": {
+                  "type": "string",
+                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                },
+                "cierra": {
+                  "type": "string",
+                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                }
+              },
+              "required": [
+                "dias",
+                "abre",
+                "cierra"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "direccion",
+          "ciudad",
+          "horarios"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "zonasEnvio": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "ubicaciones"
+  ],
+  "additionalProperties": false
+}

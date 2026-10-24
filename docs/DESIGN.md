@@ -1,16 +1,18 @@
 # DESIGN.md: motor-web (genérico)
 
 ## Arquitectura
-- Astro 5 + TypeScript, salida estática. Sin frameworks de UI: la interactividad (carrito, horarios) en TypeScript plano.
+- Astro 7 + TypeScript, salida estática. Node 24. Sin frameworks de UI: la interactividad (carrito, horarios) en TypeScript plano.
 - Todo se edita en código. Cada cliente es una carpeta en `clients/<cliente>/`:
   - `site.json`: nombre, rubro, tema, tokens de marca, contacto, WhatsApp, redes, SEO.
   - `productos.json`: catálogo (categorías, precio, variantes: unidad, caja, bulto, combo).
   - `ubicaciones.json`: direcciones, horarios, zonas de envío.
-  - `paginas/*.md`: textos largos (nosotros, preguntas frecuentes).
+  - `paginas/nosotros.md`: texto largo de presentación (Markdown).
+  - Preguntas frecuentes, testimonios y galería van en `site.json`.
   - `fotos/`: imágenes del cliente.
-- Esquemas zod en `src/schemas/` validan los datos al compilar. Un precio vacío o en 0, un horario mal escrito o una foto faltante cortan el build con un mensaje claro. El editor autocompleta los JSON a partir de esos esquemas.
+- Esquemas zod en `src/schemas/` validan los datos al compilar y en `npm test`. Un precio vacío o en 0, un horario mal escrito o una foto faltante cortan el build con un mensaje claro. El editor autocompleta los JSON a partir de esos esquemas.
 - `CLIENT=<cliente> npm run dev` muestra ese cliente; `npm run build` lo publica.
-- `npm run nuevo-cliente <nombre>` copia `clients/_ejemplo` para arrancar uno nuevo.
+- `npm run nuevo-cliente <nombre> [tema]` copia el ejemplo del tema para arrancar uno nuevo.
+- Ejemplos ficticios, uno por tema: `_ejemplo` (vivero, tienda), `_ejemplo-servicios` (estética, turnos), `_ejemplo-portfolio` (paisajismo).
 
 ## Capas
 - `src/blocks/`: bloques reutilizables, un componente cada uno (Header, Hero, Catalogo, Carrito, Ubicaciones, Galeria, Testimonios, Contacto, FAQ, Footer).
@@ -34,7 +36,7 @@
 | shadow | 0 2px 8px rgb(0 0 0 / .08) | cards, carrito |
 
 ## Tipografía
-- Dos fuentes por cliente: display y texto, servidas localmente. Default: Inter para ambas.
+- Dos fuentes por cliente: display y texto, servidas localmente con Fontsource. Disponibles: Inter, Bricolage Grotesque, Fraunces (se suman en `src/lib/marca.ts`). Default: Inter para ambas.
 - Escala: 40/32/24/20/16/14 px en desktop, 32/26/20/18/16/14 en móvil.
 
 ## Espaciado y contenedor
@@ -43,7 +45,7 @@
 
 ## Componentes base
 - Botón primario: fondo brand, texto blanco, alto mínimo 44 px, radio 999.
-- Card de producto: foto, nombre, descripción en 2 líneas, precio (o selector de variante) y botón "Agregar".
+- Card de producto: foto (opcional; sin foto la card queda solo con texto), nombre, descripción en 2 líneas, precio (o selector de variante) y botón "Agregar".
 - Chip de categoría: pill, activo = brand.
 - Badge: "Promo", "Combo", "Abierto ahora" / "Cerrado".
 

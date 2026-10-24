@@ -1,0 +1,62 @@
+---
+import { site, ubicaciones } from '../lib/cliente';
+import { textoDias } from '../lib/horarios';
+const lista = ubicaciones?.ubicaciones ?? [];
+const zonas = ubicaciones?.zonasEnvio ?? [];
+---
+
+{lista.length > 0 && (
+  <section id="ubicaciones" class="seccion" aria-labelledby="ubicaciones-titulo">
+    <div class="contenedor">
+      <h2 id="ubicaciones-titulo" class="seccion__titulo">Dónde estamos</h2>
+      {zonas.length > 0 && <p class="seccion__bajada">Hacemos envíos a {zonas.join(', ')}.</p>}
+      <ul class="ubicaciones" data-zona={site.zonaHoraria}>
+        {lista.map((u) => (
+          <li class="ubicacion" data-horarios={JSON.stringify(u.horarios)}>
+            <div class="ubicacion__cabeza">
+              <h3>{u.nombre}</h3>
+              <span class="badge badge--cerrado" data-estado hidden></span>
+            </div>
+            <p>{u.direccion}, {u.ciudad}</p>
+            <dl class="ubicacion__horarios">
+              {u.horarios.map((h) => (
+                <div><dt>{textoDias(h.dias)}</dt><dd>{h.abre} a {h.cierra}</dd></div>
+              ))}
+            </dl>
+            <div class="ubicacion__acciones">
+              {u.mapa && <a class="boton boton--chico boton--secundario" href={u.mapa} target="_blank" rel="noopener">Ver en el mapa</a>}
+              {u.telefono && <a class="boton boton--chico boton--secundario" href={`tel:${u.telefono.replace(/\s/g, '')}`}>Llamar</a>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .ubicaciones { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); }
+  @media (min-width: 760px) { .ubicaciones { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+  .ubicacion { padding: var(--s5); border: 1px solid var(--line); border-radius: var(--radius-card); display: grid; gap: var(--s3); }
+  .ubicacion__cabeza { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
+  .ubicacion__horarios { margin: 0; display: grid; gap: var(--s1); font-size: var(--t-s); }
+  .ubicacion__horarios div { display: flex; justify-content: space-between; gap: var(--s4); }
+  .ubicacion__horarios dt { color: var(--muted); }
+  .ubicacion__horarios dd { margin: 0; font-weight: 600; }
+  .ubicacion__acciones { display: flex; gap: var(--s2); flex-wrap: wrap; }
+</style>
+
+<script>
+  import { ahoraEn, estadoHorario } from '../lib/horarios';
+  const lista = document.querySelector<HTMLElement>('.ubicaciones');
+  if (lista) {
+    const { dia, minuto } = ahoraEn(lista.dataset.zona!);
+    lista.querySelectorAll<HTMLElement>('.ubicacion').forEach((u) => {
+      const estado = estadoHorario(JSON.parse(u.dataset.horarios!), dia, minuto);
+      const badge = u.querySelector<HTMLElement>('[data-estado]')!;
+      badge.textContent = estado.texto;
+      badge.className = `badge ${estado.abierto ? 'badge--abierto' : 'badge--cerrado'}`;
+      badge.hidden = false;
+    });
+  }
+</script>

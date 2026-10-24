@@ -1,0 +1,30 @@
+---
+import { site } from '../lib/cliente';
+const items = site.testimonios ?? [];
+---
+
+{items.length > 0 && (
+  <section class="seccion" aria-labelledby="testimonios-titulo">
+    <div class="contenedor">
+      <h2 id="testimonios-titulo" class="seccion__titulo">Lo que dicen los clientes</h2>
+      <ul class="testimonios">
+        {items.map((t) => (
+          <li>
+            <blockquote>
+              <p>{t.texto}</p>
+              <footer>{t.nombre}</footer>
+            </blockquote>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .testimonios { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s5); }
+  @media (min-width: 760px) { .testimonios { grid-template-columns: repeat(3, 1fr); } }
+  blockquote { margin: 0; padding-left: var(--s4); border-left: 3px solid var(--brand); }
+  blockquote p { font-size: var(--t-m); }
+  blockquote footer { margin-top: var(--s2); color: var(--muted); font-size: var(--t-s); }
+</style>

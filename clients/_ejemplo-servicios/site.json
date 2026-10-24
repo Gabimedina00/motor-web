@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/site.schema.json",
+  "nombre": "Estudio Brote",
+  "rubro": "Manicura y pestañas",
+  "tema": "servicios",
+  "descripcion": "Manicura, kapping y extensiones de pestañas en Resistencia. Pedí tu turno por WhatsApp.",
+  "url": "https://ejemplo-servicios.motor-web.pages.dev",
+  "hero": {
+    "titulo": "Uñas y pestañas con turno",
+    "bajada": "Elegí el servicio, decinos qué día te queda bien y te confirmamos por WhatsApp."
+  },
+  "marca": {
+    "tokens": {
+      "brand": "#8a3b5c",
+      "brandStrong": "#6c2a45",
+      "ink": "#241a1f",
+      "muted": "#6e5d66",
+      "surfaceAlt": "#f6eef2",
+      "accent": "#f2c9d8",
+      "accentInk": "#241a1f",
+      "radiusCard": "20px"
+    },
+    "fuentes": { "display": "Fraunces", "texto": "Inter" }
+  },
+  "contacto": { "whatsapp": "5493624000001", "instagram": "https://www.instagram.com/" },
+  "testimonios": [
+    { "nombre": "Lucía", "texto": "El kapping me duró casi un mes. Súper prolija." },
+    { "nombre": "Male", "texto": "Me dio turno para el mismo día y quedaron hermosas." },
+    { "nombre": "Sofi", "texto": "Re atenta, te explica todo antes de empezar." }
+  ],
+  "faq": [
+    { "pregunta": "¿Cuánto tiempo antes tengo que pedir turno?", "respuesta": "Con dos o tres días alcanza. Si hay lugar, te damos turno en el día." },
+    { "pregunta": "¿Puedo cancelar?", "respuesta": "Sí, avisanos por WhatsApp con 24 horas de anticipación." }
+  ]
+}

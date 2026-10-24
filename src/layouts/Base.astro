@@ -1,0 +1,73 @@
+---
+import '../styles/motor.css';
+import { site, ubicaciones, foto } from '../lib/cliente';
+import { estilosMarca, faviconDe } from '../lib/marca';
+import { horariosSchemaOrg } from '../lib/horarios';
+import { getImage } from 'astro:assets';
+
+const imagenOg = site.hero.foto ? await getImage({ src: foto(site.hero.foto), width: 1200, format: 'jpg' }) : undefined;
+const og = imagenOg ? new URL(imagenOg.src, site.url).href : undefined;
+
+const favicon = faviconDe(site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': site.tema === 'tienda' ? 'Store' : 'LocalBusiness',
+  name: site.nombre,
+  description: site.descripcion,
+  url: site.url,
+  image: og,
+  telephone: site.contacto.telefono,
+  sameAs: [site.contacto.instagram, site.contacto.facebook, site.contacto.tiktok].filter(Boolean),
+  ...(ubicaciones?.ubicaciones.length === 1
+    ? {
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: ubicaciones.ubicaciones[0].direccion,
+          addressLocality: ubicaciones.ubicaciones[0].ciudad,
+        },
+        openingHoursSpecification: horariosSchemaOrg(ubicaciones.ubicaciones[0].horarios),
+      }
+    : {
+        department: ubicaciones?.ubicaciones.map((u) => ({
+          '@type': 'LocalBusiness',
+          name: `${site.nombre} ${u.nombre}`,
+          address: { '@type': 'PostalAddress', streetAddress: u.direccion, addressLocality: u.ciudad },
+          openingHoursSpecification: horariosSchemaOrg(u.horarios),
+        })),
+      }),
+};
+---
+
+<!doctype html>
+<html lang={site.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.nombre} | {site.rubro}</title>
+    <meta name="description" content={site.descripcion} />
+    <link rel="canonical" href={site.url} />
+    <meta name="theme-color" content={site.marca.tokens.brand ?? '#2563eb'} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={site.nombre} />
+    <meta property="og:description" content={site.descripcion} />
+    <meta property="og:url" content={site.url} />
+    {og && <meta property="og:image" content={og} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={favicon} />
+    <style is:inline set:html={estilosMarca(site.marca)}></style>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <slot />
+  </body>
+</html>
+
+<style>
+  .saltar {
+    position: absolute; left: var(--s4); top: -100px; z-index: 100;
+    padding: var(--s2) var(--s4); background: var(--ink); color: var(--surface); border-radius: 8px;
+  }
+  .saltar:focus { top: var(--s2); }
+</style>

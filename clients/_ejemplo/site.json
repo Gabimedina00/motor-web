@@ -1,0 +1,45 @@
+{
+  "$schema": "../../schemas/site.schema.json",
+  "nombre": "Vivero El Helecho",
+  "rubro": "Vivero y plantas de interior",
+  "tema": "tienda",
+  "descripcion": "Plantas de interior, suculentas, macetas y sustratos en Resistencia. Armá tu pedido online y te lo llevamos a domicilio.",
+  "url": "https://ejemplo.motor-web.pages.dev",
+  "hero": {
+    "titulo": "Plantas que se adaptan a tu casa",
+    "bajada": "Elegí, armá tu pedido y lo mandás por WhatsApp. Envíos en Resistencia, Barranqueras y Fontana.",
+    "foto": "hero.jpg",
+    "alt": "Monstera, sansevieria, potus y suculentas en macetas sobre un estante"
+  },
+  "marca": {
+    "tokens": {
+      "brand": "#2f5d3a",
+      "brandStrong": "#1f4429",
+      "ink": "#18211b",
+      "muted": "#56645a",
+      "surface": "#ffffff",
+      "surfaceAlt": "#eef3ec",
+      "accent": "#e8b04a",
+      "accentInk": "#18211b",
+      "radiusCard": "14px"
+    },
+    "fuentes": { "display": "Bricolage Grotesque", "texto": "Inter" }
+  },
+  "contacto": {
+    "whatsapp": "5493624000000",
+    "telefono": "362 400 0000",
+    "instagram": "https://www.instagram.com/"
+  },
+  "pedidos": {
+    "mediosDePago": ["Transferencia", "Efectivo"],
+    "envio": true,
+    "retiro": true,
+    "avisoEnvio": "el costo del envío se cotiza según la distancia",
+    "pagoConEnvio": ["Transferencia"]
+  },
+  "faq": [
+    { "pregunta": "¿Cuánto cuesta el envío?", "respuesta": "Depende de la distancia. Cuando recibimos tu pedido por WhatsApp te pasamos el costo antes de confirmar." },
+    { "pregunta": "¿Cómo pago?", "respuesta": "Con transferencia o en efectivo si retirás en el vivero. Los envíos se pagan solo con transferencia." },
+    { "pregunta": "¿Las plantas vienen con maceta?", "respuesta": "Sí, cada planta viene en la maceta que indica su presentación. Si querés cambiarla, sumá una maceta de barro al pedido." }
+  ]
+}

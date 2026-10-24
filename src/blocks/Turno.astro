@@ -1,0 +1,75 @@
+---
+import { site, productos } from '../lib/cliente';
+const servicios = (productos?.productos ?? []).filter((p) => p.disponible).map((p) => p.nombre);
+---
+
+<section id="turno" class="seccion seccion--alt" aria-labelledby="turno-titulo">
+  <div class="contenedor turno">
+    <h2 id="turno-titulo" class="seccion__titulo">Pedí tu turno</h2>
+    <p class="seccion__bajada">Elegí el servicio y cuándo te queda bien. Te confirmamos por WhatsApp.</p>
+    <form class="turno__form" data-form-turno data-comercio={site.nombre} data-whatsapp={site.contacto.whatsapp} novalidate>
+      <div class="campo">
+        <label for="turno-servicio">Servicio</label>
+        <select id="turno-servicio" name="servicio" required>
+          {servicios.map((s) => <option>{s}</option>)}
+        </select>
+      </div>
+      <div class="campo">
+        <label for="turno-dia">Día que preferís</label>
+        <input id="turno-dia" name="dia" type="date" />
+      </div>
+      <div class="campo">
+        <label for="turno-horario">Horario</label>
+        <select id="turno-horario" name="horario">
+          <option>Mañana</option>
+          <option>Tarde</option>
+          <option>Me da igual</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="turno-nombre">Tu nombre</label>
+        <input id="turno-nombre" name="nombre" autocomplete="name" required />
+      </div>
+      <div class="campo turno__ancho">
+        <label for="turno-nota">Nota (opcional)</label>
+        <textarea id="turno-nota" name="nota" rows="2"></textarea>
+      </div>
+      <p class="turno__error turno__ancho" data-error role="alert"></p>
+      <button class="boton turno__ancho" type="submit">Pedir turno por WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .turno__form { display: grid; gap: var(--s4); max-width: 640px; }
+  @media (min-width: 600px) { .turno__form { grid-template-columns: 1fr 1fr; } .turno__ancho { grid-column: 1 / -1; } }
+  .turno__error { color: #b91c1c; font-weight: 600; }
+  .turno__error:empty { display: none; }
+</style>
+
+<script>
+  import { linkWhatsApp, mensajeTurno } from '../lib/whatsapp';
+  const form = document.querySelector<HTMLFormElement>('[data-form-turno]');
+  document.addEventListener('click', (e) => {
+    const enlace = (e.target as HTMLElement).closest<HTMLElement>('[data-elegir-servicio]');
+    if (enlace && form) (form.elements.namedItem('servicio') as HTMLSelectElement).value = enlace.dataset.elegirServicio!;
+  });
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(form);
+    const nombre = String(d.get('nombre') ?? '').trim();
+    const error = form.querySelector('[data-error]')!;
+    if (!nombre) return void (error.textContent = 'Escribí tu nombre para reservar el turno.');
+    error.textContent = '';
+    const dia = String(d.get('dia') ?? '');
+    const mensaje = mensajeTurno({
+      comercio: form.dataset.comercio!,
+      servicio: String(d.get('servicio')),
+      dia: dia ? dia.split('-').reverse().join('/') : undefined,
+      horario: String(d.get('horario')),
+      nombre,
+      nota: String(d.get('nota') ?? '').trim() || undefined,
+    });
+    window.open(linkWhatsApp(form.dataset.whatsapp!, mensaje), '_blank', 'noopener');
+  });
+</script>

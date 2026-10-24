@@ -1,0 +1,134 @@
+---
+import { site } from '../lib/cliente';
+
+const pedidos = site.pedidos ?? { mediosDePago: ['Efectivo', 'Transferencia'], envio: true, retiro: true };
+const config = {
+  comercio: site.nombre,
+  whatsapp: site.contacto.whatsapp,
+  moneda: site.moneda,
+  idioma: site.idioma,
+  clave: `motor-web:${site.nombre}`,
+  avisoEnvio: pedidos.avisoEnvio,
+  pagoConEnvio: pedidos.pagoConEnvio,
+};
+const ambas = pedidos.envio && pedidos.retiro;
+---
+
+<div class="barra" data-barra hidden>
+  <button class="boton barra__boton" type="button" data-abrir-carrito>
+    <span>Ver pedido</span>
+    <span class="barra__resumen" data-resumen></span>
+  </button>
+</div>
+
+<dialog class="carrito" data-carrito data-config={JSON.stringify(config)} aria-labelledby="carrito-titulo">
+  <form class="carrito__form" data-form-pedido novalidate>
+    <div class="carrito__cabeza">
+      <h2 id="carrito-titulo">Tu pedido</h2>
+      <button class="carrito__cerrar" type="button" data-cerrar-carrito aria-label="Cerrar">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <p class="carrito__vacio" data-vacio>Todavía no agregaste productos. Elegí algo del catálogo y aparece acá.</p>
+    <ul class="carrito__items" data-items></ul>
+    <p class="carrito__total" data-total-fila hidden>Total <strong data-total></strong></p>
+
+    <fieldset class="carrito__datos" data-datos hidden>
+      <legend class="solo-lectores">Datos para el pedido</legend>
+      {ambas ? (
+        <fieldset class="campo">
+          <legend>Entrega</legend>
+          <div class="opciones">
+            <label><input type="radio" name="entrega" value="envio" checked /> Envío a domicilio</label>
+            <label><input type="radio" name="entrega" value="retiro" /> Retiro en el local</label>
+          </div>
+        </fieldset>
+      ) : (
+        <input type="hidden" name="entrega" value={pedidos.envio ? 'envio' : 'retiro'} />
+      )}
+      {pedidos.envio && pedidos.avisoEnvio && <p class="carrito__aviso" data-aviso-envio>Envío: {pedidos.avisoEnvio}.</p>}
+      <div class="campo">
+        <label for="pedido-pago">Forma de pago</label>
+        <select id="pedido-pago" name="pago" data-pago>
+          {pedidos.mediosDePago.map((m) => <option value={m}>{m}</option>)}
+        </select>
+      </div>
+      <div class="campo">
+        <label for="pedido-nombre">Tu nombre</label>
+        <input id="pedido-nombre" name="nombre" autocomplete="name" required />
+      </div>
+      {pedidos.envio && (
+        <div class="campo" data-campo-direccion>
+          <label for="pedido-direccion">Dirección de entrega</label>
+          <input id="pedido-direccion" name="direccion" autocomplete="street-address" />
+        </div>
+      )}
+      <div class="campo">
+        <label for="pedido-nota">Nota (opcional)</label>
+        <textarea id="pedido-nota" name="nota" rows="2"></textarea>
+      </div>
+      <p class="carrito__error" data-error role="alert"></p>
+      <button class="boton carrito__enviar" type="submit">Enviar pedido por WhatsApp</button>
+      <p class="carrito__ayuda">Se abre WhatsApp con el pedido escrito. Lo revisás y lo mandás.</p>
+    </fieldset>
+  </form>
+</dialog>
+
+<style>
+  .barra {
+    position: fixed; inset: auto 0 0; z-index: 30;
+    padding: var(--s3) var(--gutter) calc(var(--s3) + env(safe-area-inset-bottom));
+    background: linear-gradient(transparent, color-mix(in srgb, var(--surface) 90%, transparent) 30%);
+    display: flex; justify-content: center;
+  }
+  .barra[hidden] { display: none; }
+  /* En escritorio alcanza con el botón del header. */
+  @media (min-width: 760px) { .barra { display: none; } }
+  .barra__boton { width: min(100%, 480px); justify-content: space-between; box-shadow: var(--shadow); }
+  .barra__resumen { font-weight: 500; }
+
+  .carrito {
+    width: min(100%, 440px); max-width: 100%; height: 100dvh; max-height: 100dvh;
+    margin: 0 0 0 auto; padding: 0; border: 0;
+    background: var(--surface); color: var(--ink);
+  }
+  .carrito::backdrop { background: rgb(0 0 0 / 0.45); }
+  .carrito__form { display: flex; flex-direction: column; gap: var(--s4); padding: var(--s5) var(--gutter) var(--s7); }
+  .carrito__cabeza { display: flex; align-items: center; justify-content: space-between; }
+  .carrito__cerrar {
+    display: grid; place-items: center; width: 44px; height: 44px;
+    border: 0; border-radius: 999px; background: var(--surface-alt); color: var(--ink); cursor: pointer;
+  }
+  .carrito__vacio { color: var(--muted); }
+  .carrito__items { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+  .carrito__total {
+    display: flex; justify-content: space-between; padding-top: var(--s3);
+    border-top: 1px solid var(--line); font-size: var(--t-m);
+  }
+  .carrito__datos { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s4); }
+  .carrito__datos[hidden] { display: none; }
+  .opciones { display: grid; gap: var(--s1); margin-top: var(--s1); }
+  .opciones label { display: flex; align-items: center; gap: var(--s2); min-height: 32px; font-weight: 400; }
+  .carrito__form fieldset.campo { border: 0; margin: 0; padding: 0; display: block; }
+  .carrito__aviso { font-size: var(--t-s); color: var(--muted); }
+  .carrito__error { color: #b91c1c; font-size: var(--t-s); font-weight: 600; }
+  .carrito__error:empty { display: none; }
+  .carrito__enviar { width: 100%; }
+  .carrito__ayuda { font-size: var(--t-s); color: var(--muted); text-align: center; }
+
+  .carrito :global(.item) { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s3); align-items: center; }
+  .carrito :global(.item__nombre) { font-weight: 600; }
+  .carrito :global(.item__variante) { color: var(--muted); font-size: var(--t-s); }
+  .carrito :global(.item__cantidad) { display: inline-flex; align-items: center; gap: var(--s2); }
+  .carrito :global(.item__cantidad button) {
+    width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--surface); color: var(--ink); font-size: 18px; cursor: pointer;
+  }
+  .carrito :global(.item__subtotal) { font-weight: 600; text-align: right; }
+</style>
+
+<script>
+  import { iniciarCarrito } from '../scripts/carrito';
+  iniciarCarrito();
+</script>

@@ -1,0 +1,31 @@
+---
+import { site } from '../lib/cliente';
+const items = site.faq ?? [];
+---
+
+{items.length > 0 && (
+  <section id="preguntas" class="seccion seccion--alt" aria-labelledby="faq-titulo">
+    <div class="contenedor"><div class="faq">
+      <h2 id="faq-titulo" class="seccion__titulo">Preguntas frecuentes</h2>
+      {items.map((f) => (
+        <details>
+          <summary>{f.pregunta}</summary>
+          <p>{f.respuesta}</p>
+        </details>
+      ))}
+    </div></div>
+  </section>
+)}
+
+<style>
+  .faq { max-width: 760px; }
+  details { border-bottom: 1px solid var(--line); }
+  summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s4);
+    min-height: 56px; cursor: pointer; font-weight: 600; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font-size: 24px; color: var(--brand); }
+  details[open] summary::after { content: '−'; }
+  details p { padding-bottom: var(--s4); color: var(--muted); max-width: 64ch; }
+</style>

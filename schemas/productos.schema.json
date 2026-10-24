@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "categorias": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "nombre"
+        ]
+      }
+    },
+    "productos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 1
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "etiqueta": {
+            "type": "string"
+          },
+          "disponible": {
+            "default": true,
+            "type": "boolean"
+          },
+          "variantes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "precio": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "nombre",
+                "precio"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "categoria",
+          "variantes"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "categorias",
+    "productos"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,19 @@
+---
+import { pagina } from '../lib/cliente';
+const Contenido = pagina('nosotros') as any;
+---
+
+{Contenido && (
+  <section id="nosotros" class="seccion seccion--alt">
+    <div class="contenedor">
+      <div class="nosotros"><Contenido /></div>
+    </div>
+  </section>
+)}
+
+<style>
+  .nosotros { max-width: 68ch; }
+  .nosotros :global(h2) { margin-bottom: var(--s4); }
+  .nosotros :global(p + p) { margin-top: var(--s3); }
+  .nosotros :global(p) { font-size: var(--t-m); }
+</style>

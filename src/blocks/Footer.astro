@@ -1,0 +1,32 @@
+---
+import { site } from '../lib/cliente';
+const c = site.contacto;
+const redes = [
+  { nombre: 'Instagram', url: c.instagram },
+  { nombre: 'Facebook', url: c.facebook },
+  { nombre: 'TikTok', url: c.tiktok },
+].filter((r) => r.url);
+const anio = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="contenedor footer__fila">
+    <p class="footer__marca">{site.nombre}</p>
+    {redes.length > 0 && (
+      <ul class="footer__redes" aria-label="Redes sociales">
+        {redes.map((r) => <li><a href={r.url} target="_blank" rel="noopener">{r.nombre}</a></li>)}
+      </ul>
+    )}
+    <p class="footer__legal">© {anio} {site.nombre}</p>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-block: var(--s6) calc(var(--s8) + var(--s5)); border-top: 1px solid var(--line); margin-top: var(--s7); }
+  .footer__fila { display: grid; gap: var(--s3); }
+  @media (min-width: 760px) { .footer__fila { grid-template-columns: 1fr auto auto; align-items: center; gap: var(--s6); } }
+  .footer__marca { font: 700 var(--t-l) var(--font-display); }
+  .footer__redes { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s4); }
+  .footer__redes a { color: var(--ink); }
+  .footer__legal { color: var(--muted); font-size: var(--t-s); }
+</style>

@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { site, foto } from '../lib/cliente';
+import { bloquesDe } from '../themes';
+
+const activos = bloquesDe(site);
+const enlaces = [
+  { bloque: 'Catalogo', href: '#catalogo', texto: site.tema === 'servicios' ? 'Servicios' : 'Catálogo' },
+  { bloque: 'Galeria', href: '#galeria', texto: 'Trabajos' },
+  { bloque: 'Turno', href: '#turno', texto: 'Pedir turno' },
+  { bloque: 'Ubicaciones', href: '#ubicaciones', texto: 'Dónde estamos' },
+  { bloque: 'Contacto', href: '#contacto', texto: 'Contacto' },
+].filter((e) => activos.includes(e.bloque as never));
+const conCarrito = activos.includes('Carrito');
+---
+
+<header class="header">
+  <div class="contenedor header__fila">
+    <a class="header__marca" href="#contenido">
+      {site.marca.logo
+        ? <Image src={foto(site.marca.logo.foto)} alt={site.marca.logo.alt} height={40} />
+        : <span>{site.nombre}</span>}
+    </a>
+    <nav aria-label="Secciones" class="header__nav">
+      {enlaces.map((e) => <a href={e.href}>{e.texto}</a>)}
+    </nav>
+    {conCarrito && (
+      <button class="header__carrito" type="button" data-abrir-carrito aria-label="Ver tu pedido, 0 productos">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span>Pedido</span>
+        <span class="header__contador" data-contador>0</span>
+      </button>
+    )}
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header__fila { display: flex; align-items: center; gap: var(--s4); min-height: var(--header-h); }
+  .header__marca {
+    font-family: var(--font-display); font-size: var(--t-l); font-weight: 700;
+    color: var(--ink); text-decoration: none; margin-right: auto;
+  }
+  .header__marca :global(img) { height: 40px; width: auto; }
+  .header__nav { display: none; gap: var(--s5); }
+  .header__nav a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  .header__nav a:hover { color: var(--brand-strong); text-decoration: underline; text-underline-offset: 4px; }
+  @media (min-width: 760px) { .header__nav { display: flex; } }
+  .header__carrito {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    min-height: 44px; padding: 0 var(--s4);
+    border: 0; border-radius: var(--radius-button);
+    background: var(--brand); color: #fff; font: 600 var(--t-s) / 1 var(--font-text); cursor: pointer;
+  }
+  .header__contador {
+    min-width: 22px; padding: 3px 6px; border-radius: 999px;
+    background: var(--accent); color: var(--accent-ink); text-align: center;
+  }
+</style>
