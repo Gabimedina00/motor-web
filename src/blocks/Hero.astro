@@ -10,11 +10,13 @@ const principal = activos.includes('Catalogo')
   : activos.includes('Galeria')
     ? { href: '#galeria', texto: 'Ver trabajos' }
     : undefined;
+const esfera = site.hero.efecto === 'esfera';
 ---
 
-<section class="hero">
+<section class:list={['hero', { 'hero--oscuro': esfera }]}>
   <div class="contenedor hero__grilla">
     <div class="hero__texto">
+      {site.hero.promo && <p class="hero__promo">{site.hero.promo}</p>}
       <h1>{site.hero.titulo}</h1>
       <p class="hero__bajada">{site.hero.bajada}</p>
       <div class="hero__acciones">
@@ -24,7 +26,12 @@ const principal = activos.includes('Catalogo')
         </a>
       </div>
     </div>
-    {site.hero.foto && (
+    {esfera ? (
+      <div class="hero__escena" aria-hidden="true" data-esfera>
+        <div class="esfera"></div>
+        <div class="esfera__sombra"></div>
+      </div>
+    ) : site.hero.foto && (
       <Image
         class="hero__foto"
         src={foto(site.hero.foto)}
@@ -40,6 +47,11 @@ const principal = activos.includes('Catalogo')
 
 <style>
   .hero { padding-block: var(--s6) var(--s7); }
+  .hero__promo {
+    display: inline-block; margin-bottom: var(--s4); padding: var(--s1) var(--s3);
+    border: 1px solid currentColor; border-radius: 999px;
+    font-size: var(--t-s); font-weight: 600; letter-spacing: 0.02em;
+  }
   .hero__grilla { display: grid; gap: var(--s6); align-items: center; }
   @media (min-width: 960px) { .hero__grilla { grid-template-columns: 1.1fr 1fr; gap: var(--s7); } }
   .hero h1 {
@@ -54,4 +66,67 @@ const principal = activos.includes('Catalogo')
     width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
     border-radius: calc(var(--radius-card) * 2);
   }
+
+  /* Portada oscura con esfera cromada (hero.efecto = "esfera"). */
+  .hero--oscuro {
+    background: var(--ink); color: var(--surface);
+    padding-block: var(--s7) var(--s8); overflow: hidden;
+  }
+  .hero--oscuro .hero__bajada { color: color-mix(in srgb, var(--surface) 78%, var(--ink)); }
+  .hero--oscuro h1 { font-size: clamp(48px, 12vw, 112px); letter-spacing: -0.035em; }
+  .hero--oscuro .boton { background: var(--surface); border-color: var(--surface); color: var(--ink); }
+  .hero--oscuro .boton:hover { background: var(--cromo-claro); border-color: var(--cromo-claro); }
+  .hero--oscuro .boton--secundario { background: transparent; color: var(--surface); }
+  .hero--oscuro .boton--secundario:hover { background: color-mix(in srgb, var(--surface) 12%, transparent); color: var(--surface); }
+  .hero--oscuro :focus-visible { outline-color: var(--surface); }
+
+  .hero__escena {
+    position: relative; justify-self: center; width: min(62vw, 460px); aspect-ratio: 1;
+    --mx: 0; --my: 0;
+  }
+  .esfera {
+    position: absolute; inset: 0; border-radius: 50%; overflow: hidden; isolation: isolate;
+    transform: translate(calc(var(--mx) * 10px), calc(var(--my) * 10px));
+    transition: transform 0.3s ease-out;
+  }
+  /* Reflejos del cromo: un degradé circular desenfocado que gira. */
+  .esfera::before {
+    content: ''; position: absolute; inset: -20%;
+    background: conic-gradient(
+      var(--cromo-claro), var(--cromo-medio), var(--cromo-oscuro), var(--cromo-claro),
+      var(--cromo-medio), var(--cromo-oscuro), var(--cromo-claro), var(--cromo-medio), var(--cromo-claro));
+    filter: blur(18px);
+  }
+  /* Brillo y sombra fijos: dan el volumen de la esfera. */
+  .esfera::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background:
+      radial-gradient(circle at calc(32% + var(--mx) * 8%) calc(27% + var(--my) * 8%), var(--cromo-claro) 0 4%, transparent 15%),
+      radial-gradient(circle at 50% 50%, transparent 55%, color-mix(in srgb, var(--cromo-oscuro) 70%, transparent) 100%);
+    box-shadow:
+      inset -40px -52px 90px color-mix(in srgb, var(--cromo-oscuro) 80%, transparent),
+      inset 22px 22px 60px color-mix(in srgb, var(--cromo-claro) 30%, transparent);
+  }
+  .esfera__sombra {
+    position: absolute; left: 15%; right: 15%; bottom: -10%; height: 12%; border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--cromo-medio) 45%, transparent), transparent);
+    filter: blur(6px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .esfera::before { animation: girar 16s linear infinite; }
+    .hero__escena { animation: flotar 6s ease-in-out infinite; }
+    @keyframes girar { to { rotate: 360deg; } }
+    @keyframes flotar { 50% { translate: 0 -14px; } }
+  }
 </style>
+
+<script>
+  // La luz de la esfera sigue al mouse. Sin efecto si el usuario pidió menos movimiento.
+  const escena = document.querySelector<HTMLElement>('[data-esfera]');
+  if (escena && matchMedia('(prefers-reduced-motion: no-preference) and (pointer: fine)').matches) {
+    addEventListener('pointermove', (e) => {
+      escena.style.setProperty('--mx', String((e.clientX / innerWidth - 0.5) * 2));
+      escena.style.setProperty('--my', String((e.clientY / innerHeight - 0.5) * 2));
+    }, { passive: true });
+  }
+</script>

@@ -1,0 +1,86 @@
+{
+  "$schema": "../../schemas/productos.schema.json",
+  "aviso": "Maqueta: precios, fotos y combos de ejemplo. Se reemplazan por los reales.",
+  "categorias": [
+    { "id": "combos", "nombre": "Combos" },
+    { "id": "guantes", "nombre": "Guantes" },
+    { "id": "barbijos", "nombre": "Barbijos" },
+    { "id": "descartables", "nombre": "Descartables" }
+  ],
+  "productos": [
+    {
+      "id": "combo-basico", "nombre": "Combo básico", "categoria": "combos", "etiqueta": "Más vendido",
+      "descripcion": "Guantes de nitrilo y barbijos para toda la semana.",
+      "foto": "combo-basico.jpg", "alt": "Caja de guantes y caja de barbijos juntas",
+      "paraQuien": [
+        { "oficio": "Manicuras", "para": "Lo justo para arrancar la semana" },
+        { "oficio": "Pestañistas", "para": "Guantes y barbijo para cada clienta" },
+        { "oficio": "Peluquerías", "para": "Higiene en cada turno" }
+      ],
+      "variantes": [{ "nombre": "Combo", "precio": 18500 }]
+    },
+    {
+      "id": "combo-gabinete", "nombre": "Combo gabinete", "categoria": "combos",
+      "descripcion": "Guantes, barbijos y pads para tener todo a mano.",
+      "foto": "combo-gabinete.jpg", "alt": "Caja de guantes, barbijos y pads juntos",
+      "paraQuien": [
+        { "oficio": "Estética", "para": "Todo lo de un día de gabinete en un pedido" },
+        { "oficio": "Tatuadores", "para": "Barrera y limpieza durante la sesión" },
+        { "oficio": "Manicuras", "para": "Reponés todo de una sola vez" }
+      ],
+      "variantes": [{ "nombre": "Combo", "precio": 27900 }]
+    },
+    {
+      "id": "guantes-nitrilo", "nombre": "Guantes de nitrilo Suplimed", "categoria": "guantes",
+      "descripcion": "Sin látex, resistentes y cómodos para trabajos largos.",
+      "foto": "guantes-nitrilo.jpg", "alt": "Caja de guantes de nitrilo",
+      "paraQuien": [
+        { "oficio": "Manicuras", "para": "Protección en cada servicio" },
+        { "oficio": "Tatuadores", "para": "Barrera durante toda la sesión" },
+        { "oficio": "Odontólogos", "para": "Uso diario en el consultorio" },
+        { "oficio": "Gastronomía", "para": "Manipular alimentos con higiene" }
+      ],
+      "variantes": [{ "nombre": "Caja", "precio": 9800 }, { "nombre": "Bulto", "precio": 92000 }]
+    },
+    {
+      "id": "barbijos", "nombre": "Barbijos descartables", "categoria": "barbijos",
+      "descripcion": "Tres capas, con elástico y ajuste nasal.",
+      "foto": "barbijos.jpg", "alt": "Caja de barbijos descartables",
+      "paraQuien": [
+        { "oficio": "Pestañistas", "para": "Trabajás a centímetros de la cara de la clienta" },
+        { "oficio": "Odontólogos", "para": "Un barbijo nuevo por paciente" },
+        { "oficio": "Estética", "para": "Higiene que la clienta ve" }
+      ],
+      "variantes": [{ "nombre": "Caja", "precio": 6500 }, { "nombre": "Bulto", "precio": 58000 }]
+    },
+    {
+      "id": "pads-ktex", "nombre": "Pads Ktex", "categoria": "descartables",
+      "descripcion": "Pads descartables para el día a día del gabinete.",
+      "foto": "pads.jpg", "alt": "Paquete de pads Ktex",
+      "paraQuien": [
+        { "oficio": "Manicuras", "para": "Limpieza rápida entre clientas" },
+        { "oficio": "Pestañistas", "para": "Zona de trabajo siempre limpia" }
+      ],
+      "variantes": [{ "nombre": "Paquete", "precio": 4200 }, { "nombre": "Bulto", "precio": 38000 }]
+    },
+    {
+      "id": "jeringas", "nombre": "Jeringas descartables", "categoria": "descartables",
+      "descripcion": "Estériles, de un solo uso.",
+      "foto": "jeringas.jpg", "alt": "Caja de jeringas descartables",
+      "paraQuien": [
+        { "oficio": "Odontólogos", "para": "Material estéril para cada paciente" },
+        { "oficio": "Estética", "para": "Uso profesional en tratamientos" }
+      ],
+      "variantes": [{ "nombre": "Caja", "precio": 7300 }]
+    },
+    {
+      "id": "eyectores", "nombre": "Eyectores de saliva", "categoria": "descartables",
+      "descripcion": "Descartables y flexibles.",
+      "foto": "eyectores.jpg", "alt": "Bolsa de eyectores de saliva",
+      "paraQuien": [
+        { "oficio": "Odontólogos", "para": "Uno nuevo por paciente, sin esterilizar" }
+      ],
+      "variantes": [{ "nombre": "Bolsa", "precio": 5600 }]
+    }
+  ]
+}

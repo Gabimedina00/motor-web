@@ -56,6 +56,10 @@ export const siteSchema = z
       .object({
         titulo: z.string().min(1),
         bajada: z.string().min(1),
+        // Etiqueta corta arriba del título, por ejemplo la promo del mes.
+        promo: z.string().optional(),
+        // "esfera": portada oscura con una esfera cromada animada en lugar de la foto.
+        efecto: z.enum(['esfera']).optional(),
         ...foto.partial().shape,
       }),
     marca: z

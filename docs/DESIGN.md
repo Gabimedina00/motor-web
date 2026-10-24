@@ -62,3 +62,9 @@
 
 ## Hosting
 - GitHub (código) + Cloudflare Pages (un proyecto por cliente, gratis para uso comercial).
+
+## Ficha en dos lados y portada cromada
+- `paraQuien` en un producto (`[{ "oficio", "para" }]`, hasta 6): la ficha se parte en dos, el producto a la izquierda y "A quién le sirve" a la derecha. En celular los oficios se deslizan de costado. Es texto de venta, no un filtro.
+- `aviso` en productos.json: línea arriba del catálogo ("Precios actualizados al…").
+- `hero.promo`: etiqueta corta arriba del título. `hero.efecto: "esfera"`: portada oscura con una esfera cromada que gira y sigue al mouse (se queda quieta si el usuario pidió menos movimiento).
+- `.revelar`: las fichas y los títulos aparecen suavemente al hacer scroll, solo en navegadores que lo soportan.

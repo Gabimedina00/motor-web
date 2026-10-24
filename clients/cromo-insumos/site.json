@@ -1,0 +1,46 @@
+{
+  "$schema": "../../schemas/site.schema.json",
+  "nombre": "Cromo Insumos",
+  "rubro": "Insumos profesionales descartables",
+  "tema": "tienda",
+  "descripcion": "Guantes, barbijos, pads y descartables para manicuras, pestañistas, odontólogos y más. Pedí por WhatsApp con envío en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
+  "url": "https://cromo-insumos.pages.dev",
+  "hero": {
+    "promo": "Envíos en moto a todo el Gran Resistencia",
+    "titulo": "Insumos profesionales en tu puerta",
+    "bajada": "Guantes, barbijos y descartables por caja, por bulto o en combo. Armá tu pedido y lo mandás por WhatsApp en un minuto.",
+    "efecto": "esfera"
+  },
+  "marca": {
+    "tokens": {
+      "brand": "#111111",
+      "brandStrong": "#000000",
+      "ink": "#111111",
+      "muted": "#57534d",
+      "surface": "#f5f1ea",
+      "surfaceAlt": "#ebe5db",
+      "accent": "#c9cdd2",
+      "accentInk": "#111111",
+      "radiusCard": "18px"
+    },
+    "fuentes": { "display": "Bricolage Grotesque", "texto": "Inter" }
+  },
+  "contacto": {
+    "whatsapp": "5493624000000",
+    "instagram": "https://www.instagram.com/cromoinsumos/"
+  },
+  "pedidos": {
+    "mediosDePago": ["Transferencia", "Efectivo"],
+    "envio": true,
+    "retiro": true,
+    "avisoEnvio": "se cotiza según la distancia",
+    "pagoConEnvio": ["Transferencia"]
+  },
+  "bloques": ["Header", "Hero", "Categorias", "Catalogo", "FAQ", "Contacto", "Footer", "Carrito"],
+  "faq": [
+    { "pregunta": "¿A qué zonas envían?", "respuesta": "Resistencia, Fontana, Barranqueras y Puerto Vilelas. El envío es en moto." },
+    { "pregunta": "¿Cuánto cuesta el envío?", "respuesta": "Depende de la distancia. Cuando recibimos tu pedido por WhatsApp te pasamos el costo antes de confirmar." },
+    { "pregunta": "¿Cómo pago?", "respuesta": "Con transferencia o en efectivo. Los pedidos con envío se pagan solo con transferencia." },
+    { "pregunta": "¿Venden por mayor?", "respuesta": "Sí: cada producto se vende por caja, por bulto o dentro de un combo." }
+  ]
+}

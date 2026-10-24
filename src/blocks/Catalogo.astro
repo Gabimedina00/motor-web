@@ -8,19 +8,23 @@ const conCarrito = bloquesDe(site).includes('Carrito');
 const conTurno = bloquesDe(site).includes('Turno');
 const $ = (n: number) => formatoPrecio(n, site.moneda, site.idioma);
 const grupos = (productos?.categorias ?? [])
-  .map((c) => ({ ...c, items: productos!.productos.filter((p) => p.categoria === c.id) }))
+  .map((c) => {
+    const items = productos!.productos.filter((p) => p.categoria === c.id);
+    return { ...c, items, doble: items.some((p) => p.paraQuien?.length) };
+  })
   .filter((c) => c.items.length);
 ---
 
 <section id="catalogo" class="seccion catalogo" aria-labelledby="catalogo-titulo">
   <div class="contenedor">
     <h2 id="catalogo-titulo" class="solo-lectores">{site.tema === 'servicios' ? 'Servicios' : 'Catálogo'}</h2>
+    {productos?.aviso && <p class="catalogo__aviso">{productos.aviso}</p>}
     {grupos.map((g) => (
       <section id={`cat-${g.id}`} class="catalogo__grupo" aria-labelledby={`tit-${g.id}`}>
-        <h2 id={`tit-${g.id}`} class="seccion__titulo">{g.nombre}</h2>
-        <ul class="catalogo__grilla">
+        <h2 id={`tit-${g.id}`} class="seccion__titulo revelar">{g.nombre}</h2>
+        <ul class:list={['catalogo__grilla', { 'catalogo__grilla--doble': g.doble }]}>
           {g.items.map((p) => (
-            <li class:list={['card', { 'card--sin-foto': !p.foto }]} data-producto={p.id}>
+            <li class:list={['card', 'revelar', { 'card--sin-foto': !p.foto, 'card--doble': p.paraQuien?.length }]} data-producto={p.id}>
               {p.foto && (
                 <Image class="card__foto" src={foto(p.foto)} alt={p.alt!} widths={[160, 320, 480]} sizes="(min-width: 600px) 320px, 104px" />
               )}
@@ -63,6 +67,17 @@ const grupos = (productos?.categorias ?? [])
                   ) : null}
                 </div>
               </div>
+              {p.paraQuien?.length && (
+                <aside class="card__quien" aria-labelledby={`quien-${p.id}`}>
+                  <h4 id={`quien-${p.id}`} class="card__quien-titulo">A quién le sirve</h4>
+                  {/* En celular la lista se desliza de costado: tabindex permite recorrerla con el teclado. */}
+                  <ul tabindex="0" aria-labelledby={`quien-${p.id}`}>
+                    {p.paraQuien.map((q) => (
+                      <li><strong>{q.oficio}</strong> <span>{q.para}</span></li>
+                    ))}
+                  </ul>
+                </aside>
+              )}
             </li>
           ))}
         </ul>
@@ -102,6 +117,51 @@ const grupos = (productos?.categorias ?? [])
   .card__pie { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; margin-top: auto; }
   .card__precio { font-weight: 700; font-size: var(--t-m); color: var(--ink); }
   .card__variante { font-weight: 500; font-size: var(--t-s); color: var(--muted); }
+  .catalogo__aviso {
+    display: inline-block; margin-bottom: var(--s5); padding: var(--s2) var(--s4);
+    border-radius: 999px; background: var(--surface-alt); color: var(--ink);
+    font-size: var(--t-s); font-weight: 600;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card__foto { transition: scale 0.5s ease; }
+    .card:hover .card__foto { scale: 1.04; }
+  }
+
+  /* Ficha en dos lados: el producto y "a quién le sirve". */
+  @media (min-width: 600px) { .catalogo__grilla--doble { grid-template-columns: 1fr; } }
+  @media (min-width: 960px) { .catalogo__grilla--doble { grid-template-columns: repeat(2, 1fr); } }
+  .card__quien { grid-column: 1 / -1; min-width: 0; }
+  .card__quien-titulo { font-family: var(--font-text); font-size: var(--t-s); font-weight: 700; margin: 0 0 var(--s2); }
+  .card__quien ul {
+    list-style: none; margin: 0; padding: 0 0 var(--s1);
+    display: flex; gap: var(--s2); overflow-x: auto; scroll-snap-type: x mandatory;
+  }
+  .card__quien li {
+    flex: 0 0 auto; max-width: 200px; scroll-snap-align: start;
+    padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--radius-card);
+    background: var(--surface-alt);
+  }
+  .card__quien ul:focus-visible { outline-offset: 4px; border-radius: 8px; }
+  .card__quien strong { display: block; font-size: var(--t-s); }
+  .card__quien span { display: block; font-size: var(--t-s); color: var(--muted); line-height: 1.35; }
+  @media (min-width: 600px) {
+    .card--doble {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 'foto quien' 'cuerpo quien';
+    }
+    .card--doble .card__foto { grid-area: foto; }
+    .card--doble .card__cuerpo { grid-area: cuerpo; }
+    .card--doble .card__quien {
+      grid-area: quien; grid-column: auto;
+      padding: var(--s5) var(--s4); background: var(--surface-alt); border-left: 1px solid var(--line);
+    }
+    .card--doble .card__quien ul { flex-direction: column; overflow: visible; gap: 0; }
+    .card--doble .card__quien li {
+      max-width: none; padding: var(--s3) 0; border: 0; border-radius: 0; background: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .card--doble .card__quien li:last-child { border-bottom: 0; }
+  }
   .card__selector select {
     min-height: 40px; max-width: 100%; padding: 0 var(--s2);
     border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 8px;

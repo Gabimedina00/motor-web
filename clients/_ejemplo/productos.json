@@ -1,5 +1,6 @@
 {
   "$schema": "../../schemas/productos.schema.json",
+  "aviso": "Precios actualizados al 1 de octubre",
   "categorias": [
     { "id": "interior", "nombre": "Plantas de interior" },
     { "id": "suculentas", "nombre": "Suculentas y cactus" },
@@ -24,6 +25,11 @@
       "id": "sansevieria", "nombre": "Sansevieria", "categoria": "interior",
       "descripcion": "La más fácil de cuidar: aguanta poca luz y se riega cada 15 días.",
       "foto": "sansevieria.jpg", "alt": "Sansevieria de hojas largas en maceta negra",
+      "paraQuien": [
+        { "oficio": "Departamentos", "para": "Aguanta poca luz y aire acondicionado" },
+        { "oficio": "Oficinas", "para": "Se riega cada 15 días, ideal si nadie se acuerda" },
+        { "oficio": "Principiantes", "para": "La planta más difícil de matar" }
+      ],
       "variantes": [{ "nombre": "Maceta 17 cm", "precio": 9800 }]
     },
     {

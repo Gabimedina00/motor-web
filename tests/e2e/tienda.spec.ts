@@ -63,3 +63,14 @@ test('muestra si el local está abierto o cerrado', async ({ page }) => {
   await abrir(page, SITIOS.tienda);
   await expect(page.locator('#ubicaciones [data-estado]')).toHaveText(/^(Abierto|Cerrado)/);
 });
+
+test('la ficha en dos lados muestra a quién le sirve el producto', async ({ page }) => {
+  await abrir(page, SITIOS.tienda);
+  await expect(page.getByText('Precios actualizados al 1 de octubre')).toBeVisible();
+  const ficha = page.locator('[data-producto="sansevieria"]');
+  const quien = ficha.getByRole('complementary', { name: 'A quién le sirve' });
+  await expect(quien.getByRole('listitem')).toHaveCount(3);
+  await expect(quien).toContainText('Departamentos');
+  // Un producto sin "paraQuien" queda como siempre.
+  await expect(page.locator('[data-producto="potus"]').getByRole('complementary')).toHaveCount(0);
+});
