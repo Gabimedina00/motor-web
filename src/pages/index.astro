@@ -6,6 +6,7 @@ import type { NombreBloque } from '../schemas/site';
 
 import Header from '../blocks/Header.astro';
 import Hero from '../blocks/Hero.astro';
+import Cinta from '../blocks/Cinta.astro';
 import Categorias from '../blocks/Categorias.astro';
 import Catalogo from '../blocks/Catalogo.astro';
 import Carrito from '../blocks/Carrito.astro';
@@ -19,7 +20,7 @@ import Contacto from '../blocks/Contacto.astro';
 import Footer from '../blocks/Footer.astro';
 
 const BLOQUES: Record<NombreBloque, (props: Record<string, unknown>) => unknown> = {
-  Header, Hero, Categorias, Catalogo, Carrito, Turno, Galeria, Nosotros, Testimonios, Ubicaciones, FAQ, Contacto, Footer,
+  Header, Hero, Cinta, Categorias, Catalogo, Carrito, Turno, Galeria, Nosotros, Testimonios, Ubicaciones, FAQ, Contacto, Footer,
 };
 
 const orden = bloquesDe(site);

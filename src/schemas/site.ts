@@ -5,6 +5,7 @@ const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Usá un color hex de 6 dígit
 export const NOMBRES_BLOQUES = [
   'Header',
   'Hero',
+  'Cinta',
   'Categorias',
   'Catalogo',
   'Carrito',
@@ -54,13 +55,21 @@ export const siteSchema = z
     zonaHoraria: z.string().default('America/Argentina/Buenos_Aires'),
     hero: z
       .object({
+        // Lo que va entre *asteriscos* se resalta con el color de acento: "Todo limpio, *sin vueltas.*".
         titulo: z.string().min(1),
         bajada: z.string().min(1),
+        // Etiqueta corta arriba del título, por ejemplo la promo del mes.
+        promo: z.string().optional(),
+        // "esfera": portada oscura con una esfera cromada animada en lugar de la foto.
+        efecto: z.enum(['esfera']).optional(),
         ...foto.partial().shape,
       }),
     marca: z
       .object({
+        // Logo completo (con el nombre adentro): reemplaza al nombre en el encabezado.
         logo: foto.optional(),
+        // Solo el símbolo, sin el nombre: va al lado del nombre y grabado en la esfera de la portada.
+        isotipo: foto.optional(),
         tokens: tokensSchema.prefault({}),
         fuentes: z
           .object({
@@ -91,6 +100,8 @@ export const siteSchema = z
       .refine((p) => p.envio || p.retiro, 'Activá envío, retiro o ambos')
       .optional(),
     bloques: z.array(z.enum(NOMBRES_BLOQUES)).optional(),
+    // Frases cortas que pasan en una cinta animada debajo de la portada.
+    cinta: z.array(z.string().min(1)).optional(),
     galeria: z.array(foto).optional(),
     testimonios: z.array(z.object({ nombre: z.string(), texto: z.string() })).optional(),
     faq: z.array(z.object({ pregunta: z.string(), respuesta: z.string() })).optional(),

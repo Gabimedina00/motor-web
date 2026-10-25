@@ -1,0 +1,31 @@
+---
+import { site } from '../lib/cliente';
+const frases = site.cinta ?? [];
+---
+
+{frases.length > 0 && (
+  <div class="cinta">
+    <p class="solo-lectores">{frases.join('. ')}</p>
+    <div class="cinta__pista" aria-hidden="true">
+      {[0, 1].map(() => (
+        <ul>{frases.map((f) => <li>{f}</li>)}</ul>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .cinta { overflow: hidden; background: var(--accent); color: var(--accent-ink); border-block: 1px solid var(--ink); }
+  .cinta__pista { display: flex; width: max-content; }
+  .cinta ul { display: flex; margin: 0; padding: 0; list-style: none; }
+  .cinta li {
+    display: flex; align-items: center; gap: var(--s5); padding: var(--s3) var(--s5) var(--s3) 0;
+    font: 700 var(--t-m) / 1.2 var(--font-display); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  .cinta li::after { content: '✦'; font-size: var(--t-s); }
+  @media (prefers-reduced-motion: no-preference) {
+    .cinta__pista { animation: correr 28s linear infinite; }
+    @keyframes correr { to { translate: -50% 0; } }
+  }
+  @media (prefers-reduced-motion: reduce) { .cinta__pista > ul + ul { display: none; } }
+</style>

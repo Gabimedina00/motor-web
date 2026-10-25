@@ -5,6 +5,9 @@
     "$schema": {
       "type": "string"
     },
+    "aviso": {
+      "type": "string"
+    },
     "categorias": {
       "minItems": 1,
       "type": "array",
@@ -52,6 +55,31 @@
           "etiqueta": {
             "type": "string"
           },
+          "fondo": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "paraQuien": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "oficio": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "para": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "oficio",
+                "para"
+              ]
+            }
+          },
           "disponible": {
             "default": true,
             "type": "boolean"
@@ -67,6 +95,10 @@
                   "minLength": 1
                 },
                 "precio": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "precioAntes": {
                   "type": "number",
                   "exclusiveMinimum": 0
                 }

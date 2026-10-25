@@ -52,6 +52,15 @@
           "type": "string",
           "minLength": 1
         },
+        "promo": {
+          "type": "string"
+        },
+        "efecto": {
+          "type": "string",
+          "enum": [
+            "esfera"
+          ]
+        },
         "foto": {
           "type": "string",
           "minLength": 1
@@ -71,6 +80,23 @@
       "type": "object",
       "properties": {
         "logo": {
+          "type": "object",
+          "properties": {
+            "foto": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "foto",
+            "alt"
+          ]
+        },
+        "isotipo": {
           "type": "object",
           "properties": {
             "foto": {
@@ -230,6 +256,7 @@
         "enum": [
           "Header",
           "Hero",
+          "Cinta",
           "Categorias",
           "Catalogo",
           "Carrito",
@@ -242,6 +269,13 @@
           "Contacto",
           "Footer"
         ]
+      }
+    },
+    "cinta": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
       }
     },
     "galeria": {

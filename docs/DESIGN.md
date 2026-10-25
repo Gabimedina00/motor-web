@@ -62,3 +62,17 @@
 
 ## Hosting
 - GitHub (código) + Cloudflare Pages (un proyecto por cliente, gratis para uso comercial).
+
+## Ficha en dos lados y portada cromada
+- `paraQuien` en un producto (`[{ "oficio", "para" }]`, hasta 6): la ficha se parte en dos, el producto a la izquierda y "A quién le sirve" a la derecha. En celular los oficios se deslizan de costado. Es texto de venta, no un filtro.
+- `aviso` en productos.json: línea arriba del catálogo ("Precios actualizados al…").
+- `hero.promo`: etiqueta corta arriba del título. `hero.efecto: "esfera"`: portada oscura con una esfera cromada que gira y sigue al mouse (se queda quieta si el usuario pidió menos movimiento).
+- `.revelar`: las fichas y los títulos aparecen suavemente al hacer scroll, solo en navegadores que lo soportan.
+
+## Cinta, colores por producto y precios de promo
+- `cinta` en site.json: frases que pasan en una franja animada (color de acento) debajo de la portada. El lector de pantalla las lee una sola vez; con menos movimiento la franja queda quieta.
+- `hero.titulo` con `*asteriscos*`: esa parte se pinta con el acento ("Todo limpio, *sin vueltas.*"). El acento tiene que contrastar con `ink`, porque la portada oscura usa `ink` de fondo.
+- `marca.isotipo`: el símbolo sin el nombre. Va al lado del nombre en el encabezado y, con `hero.efecto: "esfera"`, queda grabado en la esfera. `marca.logo` sigue siendo el logo completo que reemplaza al nombre.
+- `fondo` en un producto: color detrás de la foto, como las fichas de color de Truekind. Las fotos con fondo blanco se funden con él (no sirve para fotos con fondo oscuro).
+- `precioAntes` en una variante: precio tachado y "Ahorrás $…". En los selectores de presentación aparece como "(ahorrás $…)".
+- Las categorías llevan número (01, 02…) y título grande. Si una categoría tiene un solo producto con ficha doble, en escritorio la ficha ocupa todo el ancho.

@@ -3,6 +3,11 @@ import { z } from 'astro/zod';
 export const varianteSchema = z.object({
   nombre: z.string().min(1),
   precio: z.number().positive('El precio tiene que ser mayor a 0'),
+  // Precio de lista para promos: se muestra tachado junto con cuánto se ahorra.
+  precioAntes: z.number().positive().optional(),
+}).refine((v) => !v.precioAntes || v.precioAntes > v.precio, {
+  message: 'precioAntes tiene que ser mayor que el precio de promo',
+  path: ['precioAntes'],
 });
 
 export const productoSchema = z
@@ -14,6 +19,13 @@ export const productoSchema = z
     foto: z.string().optional(),
     alt: z.string().optional(),
     etiqueta: z.string().optional(),
+    // Color de fondo detrás de la foto (las fotos con fondo blanco se funden con él).
+    fondo: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Usá un color hex de 6 dígitos').optional(),
+    // "A quién le sirve": texto de venta que se muestra al lado del producto. No es un filtro.
+    paraQuien: z
+      .array(z.object({ oficio: z.string().min(1), para: z.string().min(1) }))
+      .max(6, 'Máximo 6 oficios por producto para que la ficha se lea de un vistazo')
+      .optional(),
     disponible: z.boolean().default(true),
     variantes: z.array(varianteSchema).min(1, 'Cada producto necesita al menos un precio'),
   })
@@ -23,6 +35,8 @@ export const productoSchema = z
 export const productosSchema = z
   .object({
     $schema: z.string().optional(),
+    // Línea arriba del catálogo, por ejemplo "Precios actualizados al 24/10".
+    aviso: z.string().optional(),
     categorias: z.array(z.object({ id: z.string(), nombre: z.string() })).min(1),
     productos: z.array(productoSchema),
   })
