@@ -79,7 +79,7 @@
       "id": "combo-primera-planta", "nombre": "Combo primera planta", "categoria": "combos",
       "descripcion": "Potus, maceta de barro de 17 cm y sustrato de 5 kg.",
       "foto": "combo-inicio.jpg", "alt": "Potus en maceta junto a una bolsa de sustrato", "etiqueta": "Combo",
-      "variantes": [{ "nombre": "Combo", "precio": 12500 }]
+      "variantes": [{ "nombre": "Combo", "precio": 12500, "precioAntes": 14000 }]
     },
     {
       "id": "combo-suculentas", "nombre": "Combo suculentas", "categoria": "combos",

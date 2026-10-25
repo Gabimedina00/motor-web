@@ -11,6 +11,7 @@
     "foto": "hero.jpg",
     "alt": "Monstera, sansevieria, potus y suculentas en macetas sobre un estante"
   },
+  "cinta": ["Envíos a domicilio", "Plantas de interior", "Macetas de barro", "Pedí por WhatsApp"],
   "marca": {
     "tokens": {
       "brand": "#2f5d3a",

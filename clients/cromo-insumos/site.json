@@ -1,32 +1,41 @@
 {
   "$schema": "../../schemas/site.schema.json",
   "nombre": "Cromo Insumos",
-  "rubro": "Insumos profesionales descartables",
+  "rubro": "Insumos descartables para estética, tatuajes y odontología",
   "tema": "tienda",
-  "descripcion": "Guantes, barbijos, pads y descartables para manicuras, pestañistas, odontólogos y más. Pedí por WhatsApp con envío en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
+  "descripcion": "Guantes de nitrilo Cromo, compresas Ktex y barbijos para estética, tatuajes, odontología, manicuras y pestañistas. Pedí por WhatsApp con envío en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
   "url": "https://cromo-insumos.pages.dev",
   "hero": {
-    "promo": "Envíos en moto a todo el Gran Resistencia",
-    "titulo": "Insumos profesionales en tu puerta",
-    "bajada": "Guantes, barbijos y descartables por caja, por bulto o en combo. Armá tu pedido y lo mandás por WhatsApp en un minuto.",
+    "promo": "Combos desde $15.000",
+    "titulo": "Todo limpio, *sin vueltas.*",
+    "bajada": "Guantes de nitrilo, compresas Ktex y barbijos para estética, tatuajes y odontología. Armá tu pedido y mandalo por WhatsApp en un minuto.",
     "efecto": "esfera"
   },
+  "cinta": [
+    "Guantes de nitrilo x100",
+    "Compresas Ktex",
+    "Barbijos",
+    "Combos desde $15.000",
+    "Envíos en moto",
+    "Pedí por WhatsApp"
+  ],
   "marca": {
+    "isotipo": { "foto": "logo-c.png", "alt": "Logo de Cromo Insumos" },
     "tokens": {
       "brand": "#111111",
       "brandStrong": "#000000",
       "ink": "#111111",
-      "muted": "#57534d",
-      "surface": "#f5f1ea",
-      "surfaceAlt": "#ebe5db",
-      "accent": "#c9cdd2",
+      "muted": "#55524c",
+      "surface": "#f6f4ef",
+      "surfaceAlt": "#ece8e0",
+      "accent": "#c6f04c",
       "accentInk": "#111111",
-      "radiusCard": "18px"
+      "radiusCard": "22px"
     },
     "fuentes": { "display": "Bricolage Grotesque", "texto": "Inter" }
   },
   "contacto": {
-    "whatsapp": "5493624000000",
+    "whatsapp": "5493624769874",
     "instagram": "https://www.instagram.com/cromoinsumos/"
   },
   "pedidos": {
@@ -36,11 +45,12 @@
     "avisoEnvio": "se cotiza según la distancia",
     "pagoConEnvio": ["Transferencia"]
   },
-  "bloques": ["Header", "Hero", "Categorias", "Catalogo", "FAQ", "Contacto", "Footer", "Carrito"],
+  "bloques": ["Header", "Hero", "Cinta", "Categorias", "Catalogo", "FAQ", "Contacto", "Footer", "Carrito"],
   "faq": [
     { "pregunta": "¿A qué zonas envían?", "respuesta": "Resistencia, Fontana, Barranqueras y Puerto Vilelas. El envío es en moto." },
     { "pregunta": "¿Cuánto cuesta el envío?", "respuesta": "Depende de la distancia. Cuando recibimos tu pedido por WhatsApp te pasamos el costo antes de confirmar." },
     { "pregunta": "¿Cómo pago?", "respuesta": "Con transferencia o en efectivo. Los pedidos con envío se pagan solo con transferencia." },
-    { "pregunta": "¿Venden por mayor?", "respuesta": "Sí: cada producto se vende por caja, por bulto o dentro de un combo." }
+    { "pregunta": "¿Puedo combinar colores y talles de guantes?", "respuesta": "Sí. Elegí la cantidad de cajas y en la nota del pedido escribí qué colores y talles querés." },
+    { "pregunta": "¿Venden por mayor?", "respuesta": "Sí: los guantes bajan de precio a partir de 2 cajas y los combos ya vienen con descuento." }
   ]
 }

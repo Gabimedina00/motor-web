@@ -42,6 +42,12 @@ describe('esquemas', () => {
     expect(productosSchema.safeParse(roto).success).toBe(false);
   });
 
+  it('rechaza un precio "antes" que no es mayor que el de promo', () => {
+    const roto = structuredClone(base);
+    roto.productos[0].variantes[0].precioAntes = roto.productos[0].variantes[0].precio;
+    expect(productosSchema.safeParse(roto).success).toBe(false);
+  });
+
   it('rechaza una foto sin alt', () => {
     const roto = structuredClone(base);
     delete roto.productos[0].alt;

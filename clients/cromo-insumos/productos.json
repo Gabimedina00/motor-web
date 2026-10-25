@@ -1,86 +1,89 @@
 {
   "$schema": "../../schemas/productos.schema.json",
-  "aviso": "Maqueta: precios, fotos y combos de ejemplo. Se reemplazan por los reales.",
+  "aviso": "Precios de las promos de octubre 2026",
   "categorias": [
     { "id": "combos", "nombre": "Combos" },
     { "id": "guantes", "nombre": "Guantes" },
-    { "id": "barbijos", "nombre": "Barbijos" },
-    { "id": "descartables", "nombre": "Descartables" }
+    { "id": "descartables", "nombre": "Compresas y barbijos" }
   ],
   "productos": [
     {
-      "id": "combo-basico", "nombre": "Combo básico", "categoria": "combos", "etiqueta": "Más vendido",
-      "descripcion": "Guantes de nitrilo y barbijos para toda la semana.",
-      "foto": "combo-basico.jpg", "alt": "Caja de guantes y caja de barbijos juntas",
+      "id": "combo-full-negro", "nombre": "Combo Full negro", "categoria": "combos", "etiqueta": "Promo",
+      "descripcion": "Compresas Ktex negras x50 y una caja de guantes de nitrilo negros x100.",
+      "foto": "combo-full-negro.jpg", "alt": "Paquete de compresas Ktex negras junto a una mano con guante de nitrilo negro",
+      "fondo": "#e4f5b5",
       "paraQuien": [
-        { "oficio": "Manicuras", "para": "Lo justo para arrancar la semana" },
-        { "oficio": "Pestañistas", "para": "Guantes y barbijo para cada clienta" },
-        { "oficio": "Peluquerías", "para": "Higiene en cada turno" }
+        { "oficio": "Tatuadores", "para": "Todo negro, como tu estudio, para cada sesión" },
+        { "oficio": "Manicuras", "para": "Guantes y compresas para la semana en un pedido" },
+        { "oficio": "Estética", "para": "Camilla cubierta y manos protegidas" }
       ],
-      "variantes": [{ "nombre": "Combo", "precio": 18500 }]
+      "variantes": [{ "nombre": "Combo x2", "precio": 15000, "precioAntes": 17000 }]
     },
     {
-      "id": "combo-gabinete", "nombre": "Combo gabinete", "categoria": "combos",
-      "descripcion": "Guantes, barbijos y pads para tener todo a mano.",
-      "foto": "combo-gabinete.jpg", "alt": "Caja de guantes, barbijos y pads juntos",
+      "id": "combo-full-rosa-x2", "nombre": "Combo Full rosa", "categoria": "combos", "etiqueta": "Promo",
+      "descripcion": "Compresas Ktex x50 y una caja de guantes de nitrilo rosa x100.",
+      "foto": "combo-full-rosa-x2.jpg", "alt": "Paquete de compresas Ktex rosa junto a una mano con guante de nitrilo rosa",
+      "fondo": "#f9d3e4",
       "paraQuien": [
-        { "oficio": "Estética", "para": "Todo lo de un día de gabinete en un pedido" },
-        { "oficio": "Tatuadores", "para": "Barrera y limpieza durante la sesión" },
-        { "oficio": "Manicuras", "para": "Reponés todo de una sola vez" }
+        { "oficio": "Pestañistas", "para": "Compresa limpia en la camilla para cada clienta" },
+        { "oficio": "Manicuras", "para": "Guantes rosa que combinan con tu gabinete" },
+        { "oficio": "Estética", "para": "Lo básico del día en un solo combo" }
       ],
-      "variantes": [{ "nombre": "Combo", "precio": 27900 }]
+      "variantes": [{ "nombre": "Combo x2", "precio": 15000, "precioAntes": 17000 }]
     },
     {
-      "id": "guantes-nitrilo", "nombre": "Guantes de nitrilo Suplimed", "categoria": "guantes",
-      "descripcion": "Sin látex, resistentes y cómodos para trabajos largos.",
-      "foto": "guantes-nitrilo.jpg", "alt": "Caja de guantes de nitrilo",
+      "id": "combo-full-rosa-x3", "nombre": "Combo Full rosa x3", "categoria": "combos", "etiqueta": "Más completo",
+      "descripcion": "Compresas Ktex x50, barbijos x25 y una caja de guantes de nitrilo rosa x100.",
+      "foto": "combo-full-rosa-x3.jpg", "alt": "Compresas Ktex, un barbijo rosa y una mano con guante de nitrilo rosa",
+      "fondo": "#f9d3e4",
       "paraQuien": [
-        { "oficio": "Manicuras", "para": "Protección en cada servicio" },
-        { "oficio": "Tatuadores", "para": "Barrera durante toda la sesión" },
-        { "oficio": "Odontólogos", "para": "Uso diario en el consultorio" },
+        { "oficio": "Pestañistas", "para": "Trabajás cerca de la cara: barbijo, guantes y camilla cubierta" },
+        { "oficio": "Odontología", "para": "Barbijo, guantes y babero para cada paciente" },
+        { "oficio": "Estética", "para": "Los tres descartables del gabinete juntos" }
+      ],
+      "variantes": [{ "nombre": "Combo x3", "precio": 21600, "precioAntes": 24000 }]
+    },
+    {
+      "id": "guantes-nitrilo-cromo", "nombre": "Guantes de nitrilo Cromo", "categoria": "guantes", "etiqueta": "Marca Cromo",
+      "descripcion": "Caja x100, sin polvo y texturados. Rosa (S y M), celeste (S, M y L), negro (M y L) y blanco (M). Podés combinar colores y talles: anotalo en tu pedido.",
+      "foto": "guantes-cajas.jpg", "alt": "Cajas de guantes de nitrilo Cromo en rosa, blanco, negro y celeste",
+      "paraQuien": [
+        { "oficio": "Manicuras", "para": "Protección y agarre en cada servicio" },
+        { "oficio": "Tatuadores", "para": "Barrera durante toda la sesión, sin látex" },
+        { "oficio": "Odontología", "para": "Uso diario en el consultorio" },
         { "oficio": "Gastronomía", "para": "Manipular alimentos con higiene" }
       ],
-      "variantes": [{ "nombre": "Caja", "precio": 9800 }, { "nombre": "Bulto", "precio": 92000 }]
+      "variantes": [
+        { "nombre": "1 caja", "precio": 10000 },
+        { "nombre": "2 cajas", "precio": 19000, "precioAntes": 20000 },
+        { "nombre": "3 cajas", "precio": 27000, "precioAntes": 30000 },
+        { "nombre": "5 cajas", "precio": 43500, "precioAntes": 50000 },
+        { "nombre": "10 cajas", "precio": 80000, "precioAntes": 100000 }
+      ]
     },
     {
-      "id": "barbijos", "nombre": "Barbijos descartables", "categoria": "barbijos",
-      "descripcion": "Tres capas, con elástico y ajuste nasal.",
-      "foto": "barbijos.jpg", "alt": "Caja de barbijos descartables",
+      "id": "compresas-ktex", "nombre": "Compresas Ktex", "categoria": "descartables",
+      "descripcion": "Pack x50 descartables, con 1 capa impermeable y 1 absorbente. En rosa, blanca o negra. Producto médico de venta libre.",
+      "foto": "compresas-ktex.jpg", "alt": "Paquetes de compresas Ktex rosa, blanca y negra",
+      "fondo": "#f9d3e4",
+      "paraQuien": [
+        { "oficio": "Tatuadores", "para": "Cubrís la zona de trabajo y absorbe sin traspasar" },
+        { "oficio": "Odontología", "para": "Babero descartable para cada paciente" },
+        { "oficio": "Estética", "para": "Camilla limpia entre clienta y clienta" }
+      ],
+      "variantes": [{ "nombre": "Pack x50", "precio": 7000 }]
+    },
+    {
+      "id": "barbijos", "nombre": "Barbijos descartables", "categoria": "descartables",
+      "descripcion": "Pack x25. Protección diaria en tu consultorio o gabinete.",
+      "foto": "barbijos.jpg", "alt": "Barbijos descartables rosa y celeste",
+      "fondo": "#d5eaf8",
       "paraQuien": [
         { "oficio": "Pestañistas", "para": "Trabajás a centímetros de la cara de la clienta" },
-        { "oficio": "Odontólogos", "para": "Un barbijo nuevo por paciente" },
+        { "oficio": "Odontología", "para": "Un barbijo nuevo por paciente" },
         { "oficio": "Estética", "para": "Higiene que la clienta ve" }
       ],
-      "variantes": [{ "nombre": "Caja", "precio": 6500 }, { "nombre": "Bulto", "precio": 58000 }]
-    },
-    {
-      "id": "pads-ktex", "nombre": "Pads Ktex", "categoria": "descartables",
-      "descripcion": "Pads descartables para el día a día del gabinete.",
-      "foto": "pads.jpg", "alt": "Paquete de pads Ktex",
-      "paraQuien": [
-        { "oficio": "Manicuras", "para": "Limpieza rápida entre clientas" },
-        { "oficio": "Pestañistas", "para": "Zona de trabajo siempre limpia" }
-      ],
-      "variantes": [{ "nombre": "Paquete", "precio": 4200 }, { "nombre": "Bulto", "precio": 38000 }]
-    },
-    {
-      "id": "jeringas", "nombre": "Jeringas descartables", "categoria": "descartables",
-      "descripcion": "Estériles, de un solo uso.",
-      "foto": "jeringas.jpg", "alt": "Caja de jeringas descartables",
-      "paraQuien": [
-        { "oficio": "Odontólogos", "para": "Material estéril para cada paciente" },
-        { "oficio": "Estética", "para": "Uso profesional en tratamientos" }
-      ],
-      "variantes": [{ "nombre": "Caja", "precio": 7300 }]
-    },
-    {
-      "id": "eyectores", "nombre": "Eyectores de saliva", "categoria": "descartables",
-      "descripcion": "Descartables y flexibles.",
-      "foto": "eyectores.jpg", "alt": "Bolsa de eyectores de saliva",
-      "paraQuien": [
-        { "oficio": "Odontólogos", "para": "Uno nuevo por paciente, sin esterilizar" }
-      ],
-      "variantes": [{ "nombre": "Bolsa", "precio": 5600 }]
+      "variantes": [{ "nombre": "Pack x25", "precio": 7000 }]
     }
   ]
 }

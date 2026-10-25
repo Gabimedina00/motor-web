@@ -74,3 +74,13 @@ test('la ficha en dos lados muestra a quién le sirve el producto', async ({ pag
   // Un producto sin "paraQuien" queda como siempre.
   await expect(page.locator('[data-producto="potus"]').getByRole('complementary')).toHaveCount(0);
 });
+
+test('la cinta y los precios de promo se leen bien', async ({ page }) => {
+  await abrir(page, SITIOS.tienda);
+  // La cinta animada es decorativa: el texto se lee una sola vez, en la versión para lectores de pantalla.
+  await expect(page.locator('.cinta .solo-lectores')).toHaveText(/Envíos a domicilio\. Plantas de interior/);
+  await expect(page.locator('.cinta__pista')).toHaveAttribute('aria-hidden', 'true');
+  const combo = page.locator('[data-producto="combo-primera-planta"]');
+  await expect(combo.locator('s')).toHaveText('Antes $ 14.000');
+  await expect(combo.getByText('Ahorrás $ 1.500')).toBeVisible();
+});
