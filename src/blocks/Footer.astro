@@ -11,7 +11,7 @@ const anio = new Date().getFullYear();
 
 <footer class="footer">
   <div class="contenedor footer__fila">
-    <p class="footer__marca">{site.nombre}</p>
+    <p class="footer__marca">{site.nombre}{site.marca.lema && <span class="footer__lema">{site.marca.lema}</span>}</p>
     {redes.length > 0 && (
       <ul class="footer__redes" aria-label="Redes sociales">
         {redes.map((r) => <li><a href={r.url} target="_blank" rel="noopener">{r.nombre}</a></li>)}
@@ -26,6 +26,7 @@ const anio = new Date().getFullYear();
   .footer__fila { display: grid; gap: var(--s3); }
   @media (min-width: 760px) { .footer__fila { grid-template-columns: 1fr auto auto; align-items: center; gap: var(--s6); } }
   .footer__marca { font: 700 var(--t-l) var(--font-display); }
+  .footer__lema { display: block; margin-top: var(--s1); font: 500 var(--t-s) var(--font-text); color: var(--muted); }
   .footer__redes { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s4); }
   .footer__redes a { color: var(--ink); }
   .footer__legal { color: var(--muted); font-size: var(--t-s); }

@@ -1,38 +1,50 @@
 {
   "$schema": "../../schemas/site.schema.json",
   "nombre": "Cromo Insumos",
-  "rubro": "Insumos descartables para estética, tatuajes y odontología",
+  "rubro": "Guantes, barbijos y compresas en Resistencia",
   "tema": "tienda",
-  "descripcion": "Guantes de nitrilo Cromo, compresas Ktex y barbijos para estética, tatuajes, odontología, manicuras y pestañistas. Pedí por WhatsApp con envío en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
+  "descripcion": "Guantes de nitrilo Cromo, compresas Ktex y barbijos para manicura, pestañas, estética, tatuajes, odontología y gastronomía. Pedí por WhatsApp con envío en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
   "url": "https://cromo-insumos.pages.dev",
   "hero": {
-    "promo": "Combos desde $15.000",
-    "titulo": "Todo limpio, *sin vueltas.*",
-    "bajada": "Guantes de nitrilo, compresas Ktex y barbijos para estética, tatuajes y odontología. Armá tu pedido y mandalo por WhatsApp en un minuto.",
-    "efecto": "esfera"
+    "promo": "Cromo Insumos · Resistencia, Chaco",
+    "titulo": "Tu trabajo merece *buenos insumos.*",
+    "bajada": "Guantes de nitrilo, compresas y barbijos para tu día a día. Elegí tus productos, aprovechá los combos y armá tu pedido por WhatsApp.",
+    "apoyo": "Envíos en Resistencia, Fontana, Barranqueras y Puerto Vilelas.",
+    "botonPrincipal": "Ver precios",
+    "botonWhatsApp": "Hacer una consulta",
+    "efecto": "emblema",
+    "foto": "emblema.png",
+    "alt": "Emblema de Cromo Insumos: una esfera cromada con la letra C"
   },
-  "cinta": [
-    "Guantes de nitrilo x100",
-    "Compresas Ktex",
-    "Barbijos",
-    "Combos desde $15.000",
-    "Envíos en moto",
-    "Pedí por WhatsApp"
-  ],
+  "cinta": {
+    "frases": ["Precios a la vista", "Combos", "Pedidos por WhatsApp"],
+    "nota": "Para manicura, pestañas, estética, tatuajes, odontología y gastronomía."
+  },
   "marca": {
-    "isotipo": { "foto": "logo-c.png", "alt": "Logo de Cromo Insumos" },
+    "isotipo": { "foto": "emblema.png", "alt": "Emblema de Cromo Insumos" },
+    "lema": "Insumos para hacer",
+    "esquema": "oscuro",
     "tokens": {
-      "brand": "#111111",
-      "brandStrong": "#000000",
-      "ink": "#111111",
-      "muted": "#55524c",
-      "surface": "#f6f4ef",
-      "surfaceAlt": "#ece8e0",
-      "accent": "#c6f04c",
-      "accentInk": "#111111",
-      "radiusCard": "22px"
+      "brand": "#b6a2ff",
+      "brandStrong": "#c7b7ff",
+      "brandInk": "#14121d",
+      "ink": "#f4f5f7",
+      "muted": "#b7bdc9",
+      "surface": "#0e0f12",
+      "surfaceAlt": "#16181d",
+      "surfaceRaised": "#1e2129",
+      "line": "#313745",
+      "controlBorder": "#737e93",
+      "accent": "#8bd8ee",
+      "accentInk": "#0e0f12",
+      "focus": "#8bd8ee",
+      "link": "#8bd8ee",
+      "promo": "#ffb26b",
+      "promoInk": "#14121d",
+      "error": "#ff9b9b",
+      "radiusCard": "18px"
     },
-    "fuentes": { "display": "Bricolage Grotesque", "texto": "Inter" }
+    "fuentes": { "display": "Inter", "texto": "Inter" }
   },
   "contacto": {
     "whatsapp": "5493624769874",
@@ -42,15 +54,20 @@
     "mediosDePago": ["Transferencia", "Efectivo"],
     "envio": true,
     "retiro": true,
-    "avisoEnvio": "se cotiza según la distancia",
+    "avisoEnvio": "a coordinar según tu ubicación",
     "pagoConEnvio": ["Transferencia"]
   },
-  "bloques": ["Header", "Hero", "Cinta", "Categorias", "Catalogo", "FAQ", "Contacto", "Footer", "Carrito"],
+  "bloques": ["Header", "Hero", "Cinta", "Categorias", "Catalogo", "Pasos", "FAQ", "Contacto", "Footer", "Carrito"],
+  "pasos": [
+    { "titulo": "Elegí tus productos", "texto": "Mirá los precios, elegí presentación, color y talle, y agregalos al pedido." },
+    { "titulo": "Revisá tu pedido", "texto": "Elegí envío o retiro coordinado, la localidad y la forma de pago." },
+    { "titulo": "Coordiná por WhatsApp", "texto": "Se abre WhatsApp con el pedido escrito. Lo revisás, lo enviás y coordinamos la entrega." }
+  ],
   "faq": [
-    { "pregunta": "¿A qué zonas envían?", "respuesta": "Resistencia, Fontana, Barranqueras y Puerto Vilelas. El envío es en moto." },
+    { "pregunta": "¿A qué zonas envían?", "respuesta": "Resistencia, Fontana, Barranqueras y Puerto Vilelas. El envío es en moto. Si estás en otra zona, consultanos." },
     { "pregunta": "¿Cuánto cuesta el envío?", "respuesta": "Depende de la distancia. Cuando recibimos tu pedido por WhatsApp te pasamos el costo antes de confirmar." },
-    { "pregunta": "¿Cómo pago?", "respuesta": "Con transferencia o en efectivo. Los pedidos con envío se pagan solo con transferencia." },
-    { "pregunta": "¿Puedo combinar colores y talles de guantes?", "respuesta": "Sí. Elegí la cantidad de cajas y en la nota del pedido escribí qué colores y talles querés." },
+    { "pregunta": "¿Cómo pago?", "respuesta": "Los pedidos con envío se pagan con transferencia. Si retirás, podés pagar con transferencia o en efectivo." },
+    { "pregunta": "¿Puedo combinar colores y talles de guantes?", "respuesta": "Sí. Si elegís 2 cajas o más, tocá “Combinar colores y talles” y elegí cuántas cajas querés de cada uno." },
     { "pregunta": "¿Venden por mayor?", "respuesta": "Sí: los guantes bajan de precio a partir de 2 cajas y los combos ya vienen con descuento." }
   ]
 }
