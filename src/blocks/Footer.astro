@@ -1,7 +1,9 @@
 ---
 import { site } from '../lib/cliente';
+import { linkWhatsApp } from '../lib/whatsapp';
 const c = site.contacto;
 const redes = [
+  { nombre: 'WhatsApp', url: linkWhatsApp(c.whatsapp) },
   { nombre: 'Instagram', url: c.instagram },
   { nombre: 'Facebook', url: c.facebook },
   { nombre: 'TikTok', url: c.tiktok },
@@ -13,7 +15,7 @@ const anio = new Date().getFullYear();
   <div class="contenedor footer__fila">
     <p class="footer__marca">{site.nombre}{site.marca.lema && <span class="footer__lema">{site.marca.lema}</span>}</p>
     {redes.length > 0 && (
-      <ul class="footer__redes" aria-label="Redes sociales">
+      <ul class="footer__redes" aria-label="WhatsApp y redes">
         {redes.map((r) => <li><a href={r.url} target="_blank" rel="noopener">{r.nombre}</a></li>)}
       </ul>
     )}

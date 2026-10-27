@@ -84,6 +84,9 @@ const categorias = (productos?.categorias ?? []).filter((c) =>
       a?.setAttribute('aria-current', 'location');
       actual = a;
       if (a) revelar(a);
+      // De vuelta arriba del catálogo, la lista vuelve a mostrar el primer atajo.
+      else if (pares[0][1].getBoundingClientRect().top > alto + 16)
+        lista.scrollTo({ left: 0, behavior: menosMovimiento.matches ? 'instant' : 'smooth' });
     };
 
     // La sección actual es la última cuyo comienzo ya pasó por debajo de las barras.
