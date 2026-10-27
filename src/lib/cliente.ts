@@ -11,11 +11,13 @@ import { ubicacionesSchema, type Ubicaciones } from '../schemas/ubicaciones';
 export const CLIENTE = process.env.CLIENT || '_ejemplo';
 const carpeta = path.join(process.cwd(), 'clients', CLIENTE);
 
-const fotos = import.meta.glob<ImageMetadata>('/clients/*/fotos/*.{jpg,jpeg,png,webp,avif}', {
-  eager: true,
-  import: 'default',
-});
-const paginas = import.meta.glob<{ Content: unknown }>('/clients/*/paginas/*.md', { eager: true });
+// Solo los archivos del cliente activo ("@cliente" se define en astro.config.mjs), indexados por nombre.
+const porNombre = <T>(archivos: Record<string, T>) =>
+  Object.fromEntries(Object.entries(archivos).map(([ruta, valor]) => [ruta.split('/').pop()!, valor]));
+const fotos = porNombre(
+  import.meta.glob<ImageMetadata>('@cliente/fotos/*.{jpg,jpeg,png,webp,avif}', { eager: true, import: 'default' }),
+);
+const paginas = porNombre(import.meta.glob<{ Content: unknown }>('@cliente/paginas/*.md', { eager: true }));
 
 function leer<T>(archivo: string, schema: z.ZodType<T>, opcional = false): T | undefined {
   const ruta = path.join(carpeta, archivo);
@@ -38,13 +40,13 @@ function leer<T>(archivo: string, schema: z.ZodType<T>, opcional = false): T | u
 }
 
 export function foto(nombre: string): ImageMetadata {
-  const imagen = fotos[`/clients/${CLIENTE}/fotos/${nombre}`];
+  const imagen = fotos[nombre];
   if (!imagen) throw new Error(`[motor-web] No existe la foto clients/${CLIENTE}/fotos/${nombre}`);
   return imagen;
 }
 
 export function pagina(nombre: string) {
-  return paginas[`/clients/${CLIENTE}/paginas/${nombre}.md`]?.Content as
+  return paginas[`${nombre}.md`]?.Content as
     | ((props: Record<string, unknown>) => unknown)
     | undefined;
 }
@@ -57,6 +59,8 @@ export const ubicaciones: Ubicaciones | undefined = leer('ubicaciones.json', ubi
 [
   site.hero.foto,
   site.marca.logo?.foto,
+  site.marca.isotipo?.foto,
+  site.compartir?.foto,
   ...(site.galeria ?? []).map((g) => g.foto),
   ...(productos?.productos ?? []).map((p) => p.foto),
 ]
