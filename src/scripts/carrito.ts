@@ -176,11 +176,17 @@ export function iniciarCarrito() {
     const error = q('[data-error]');
     const campoLocalidad = dialogo.querySelector<HTMLSelectElement>('[data-localidad]');
 
-    form.querySelectorAll('[aria-invalid]').forEach((c) => c.removeAttribute('aria-invalid'));
+    form.querySelectorAll('[aria-invalid]').forEach((c) => {
+      c.removeAttribute('aria-invalid');
+      if (c.getAttribute('aria-describedby') === error.id) c.removeAttribute('aria-describedby');
+    });
+    // El mensaje va justo debajo del campo que falta, que además se marca con borde de error.
     const fallar = (mensaje: string, nombreCampo: string) => {
-      error.textContent = mensaje;
       const campo = form.querySelector<HTMLElement>(`[name="${nombreCampo}"]`);
+      campo?.closest('.campo')?.append(error);
+      error.textContent = mensaje;
       campo?.setAttribute('aria-invalid', 'true');
+      campo?.setAttribute('aria-describedby', error.id);
       campo?.focus();
     };
     if (esEnvio && campoLocalidad && !localidad) return fallar('Elegí tu localidad para el envío.', 'localidad');

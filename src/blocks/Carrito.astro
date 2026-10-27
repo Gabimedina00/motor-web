@@ -97,7 +97,7 @@ const pagoEnvio = pedidos.pagoConEnvio?.length ? pedidos.pagoConEnvio : undefine
         <label for="pedido-nota">Aclaraciones para tu pedido (opcional)</label>
         <textarea id="pedido-nota" name="nota" rows="2"></textarea>
       </div>
-      <p class="carrito__error" data-error role="alert"></p>
+      <p class="carrito__error" id="pedido-error" data-error role="alert"></p>
       <button class="boton carrito__enviar" type="submit" aria-describedby="pedido-ayuda">Continuar por WhatsApp</button>
       <p class="carrito__ayuda" id="pedido-ayuda">Revisá el mensaje y envialo para coordinar tu pedido.</p>
     </fieldset>

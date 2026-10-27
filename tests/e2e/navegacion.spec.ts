@@ -76,3 +76,31 @@ test('cambiar rápido de atajo termina en el último elegido', async ({ page }) 
   expect(separacion).toBeGreaterThanOrEqual(0);
   expect(separacion).toBeLessThan(48);
 });
+
+test('Atrás vuelve a la categoría anterior y la marca', async ({ page }) => {
+  await abrir(page, SITIOS.tienda);
+  const atajos = page.getByRole('navigation', { name: 'Categorías del catálogo' });
+  await atajos.getByRole('link', { name: 'Sustratos' }).click();
+  await quieta(page);
+  await atajos.getByRole('link', { name: 'Combos' }).click();
+  await quieta(page);
+  await page.goBack();
+  await quieta(page);
+  expect(page.url()).toMatch(/#cat-sustratos$/);
+  const separacion = await separacionDelTitulo(page, 'tit-sustratos');
+  expect(separacion).toBeGreaterThanOrEqual(0);
+  expect(separacion).toBeLessThan(48);
+  await expect(atajos.getByRole('link', { name: 'Sustratos' })).toHaveAttribute('aria-current', 'location');
+});
+
+test('la rueda del mouse corta el viaje a una categoría y la página no insiste', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'La rueda es de escritorio');
+  await abrir(page, SITIOS.tienda);
+  await page.getByRole('navigation', { name: 'Categorías del catálogo' }).getByRole('link', { name: 'Combos' }).click();
+  await page.waitForTimeout(120);
+  await page.mouse.move(600, 500);
+  await page.mouse.wheel(0, -400);
+  const y = await quieta(page);
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(() => scrollY)).toBe(y);
+});
