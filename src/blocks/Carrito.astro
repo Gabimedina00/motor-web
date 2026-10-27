@@ -1,7 +1,12 @@
 ---
 import { site } from '../lib/cliente';
 
-const pedidos = site.pedidos ?? { mediosDePago: ['Efectivo', 'Transferencia'], envio: true, retiro: true };
+const pedidos = site.pedidos ?? {
+  mediosDePago: ['Efectivo', 'Transferencia'],
+  envio: true,
+  retiro: true,
+  nombreRetiro: 'Retiro en el local',
+};
 const config = {
   comercio: site.nombre,
   whatsapp: site.contacto.whatsapp,
@@ -10,8 +15,10 @@ const config = {
   clave: `motor-web:${site.nombre}`,
   avisoEnvio: pedidos.avisoEnvio,
   pagoConEnvio: pedidos.pagoConEnvio,
+  nombreRetiro: pedidos.nombreRetiro,
 };
 const ambas = pedidos.envio && pedidos.retiro;
+const pagoEnvio = pedidos.pagoConEnvio?.length ? pedidos.pagoConEnvio : undefined;
 ---
 
 <p class="solo-lectores" aria-live="polite" data-anuncio></p>
@@ -34,7 +41,11 @@ const ambas = pedidos.envio && pedidos.retiro;
 
     <p class="carrito__vacio" data-vacio>Todavía no agregaste productos. Elegí algo del catálogo y aparece acá.</p>
     <ul class="carrito__items" data-items></ul>
-    <p class="carrito__total" data-total-fila hidden>Total <strong data-total></strong></p>
+    <!-- El envío todavía no tiene precio: el subtotal es solo de productos. -->
+    <div class="carrito__totales" data-total-fila hidden>
+      <p class="carrito__fila carrito__fila--fuerte">Subtotal de productos <strong data-total></strong></p>
+      {pedidos.envio && <p class="carrito__fila" data-solo-envio>Envío <span>A coordinar</span></p>}
+    </div>
 
     <fieldset class="carrito__datos" data-datos hidden>
       <legend class="solo-lectores">Datos para el pedido</legend>
@@ -43,36 +54,52 @@ const ambas = pedidos.envio && pedidos.retiro;
           <legend>Entrega</legend>
           <div class="opciones">
             <label><input type="radio" name="entrega" value="envio" checked /> Envío a domicilio</label>
-            <label><input type="radio" name="entrega" value="retiro" /> Retiro en el local</label>
+            <label><input type="radio" name="entrega" value="retiro" /> {pedidos.nombreRetiro}</label>
           </div>
         </fieldset>
       ) : (
         <input type="hidden" name="entrega" value={pedidos.envio ? 'envio' : 'retiro'} />
       )}
-      {pedidos.envio && pedidos.avisoEnvio && <p class="carrito__aviso" data-aviso-envio>Envío: {pedidos.avisoEnvio}.</p>}
-      <div class="campo">
-        <label for="pedido-pago">Forma de pago</label>
-        <select id="pedido-pago" name="pago" data-pago>
-          {pedidos.mediosDePago.map((m) => <option value={m}>{m}</option>)}
-        </select>
-      </div>
-      <div class="campo">
-        <label for="pedido-nombre">Tu nombre</label>
-        <input id="pedido-nombre" name="nombre" autocomplete="name" required />
-      </div>
+      {pedidos.envio && pedidos.avisoEnvio && <p class="carrito__aviso" data-solo-envio>Envío: {pedidos.avisoEnvio}.</p>}
+      {pedidos.envio && pedidos.localidades && (
+        <div class="campo" data-solo-envio>
+          <label for="pedido-localidad">Localidad</label>
+          <select id="pedido-localidad" name="localidad" data-localidad>
+            <option value="">Elegí tu localidad</option>
+            {pedidos.localidades.map((l) => <option value={l}>{l}</option>)}
+            <option value="otra">Otra zona (consultar)</option>
+          </select>
+          <p class="carrito__aviso" data-aviso-otra hidden>Escribí tu dirección y te confirmamos por WhatsApp si llegamos a tu zona.</p>
+        </div>
+      )}
       {pedidos.envio && (
-        <div class="campo" data-campo-direccion>
+        <div class="campo" data-solo-envio>
           <label for="pedido-direccion">Dirección de entrega</label>
           <input id="pedido-direccion" name="direccion" autocomplete="street-address" />
         </div>
       )}
       <div class="campo">
-        <label for="pedido-nota">Nota (opcional)</label>
+        <label for="pedido-pago">Forma de pago</label>
+        <select id="pedido-pago" name="pago" data-pago aria-describedby={pagoEnvio ? 'pedido-pago-ayuda' : undefined}>
+          {pedidos.mediosDePago.map((m) => <option value={m}>{m}</option>)}
+        </select>
+        {pagoEnvio && (
+          <p class="carrito__aviso" id="pedido-pago-ayuda" data-ayuda-pago hidden>
+            Con envío se paga con {pagoEnvio.join(' o ').toLowerCase()}.
+          </p>
+        )}
+      </div>
+      <div class="campo">
+        <label for="pedido-nombre">Tu nombre</label>
+        <input id="pedido-nombre" name="nombre" autocomplete="name" required />
+      </div>
+      <div class="campo">
+        <label for="pedido-nota">Aclaraciones para tu pedido (opcional)</label>
         <textarea id="pedido-nota" name="nota" rows="2"></textarea>
       </div>
       <p class="carrito__error" data-error role="alert"></p>
-      <button class="boton carrito__enviar" type="submit">Enviar pedido por WhatsApp</button>
-      <p class="carrito__ayuda">Se abre WhatsApp con el pedido escrito. Lo revisás y lo mandás.</p>
+      <button class="boton carrito__enviar" type="submit" aria-describedby="pedido-ayuda">Continuar por WhatsApp</button>
+      <p class="carrito__ayuda" id="pedido-ayuda">Revisá el mensaje y envialo para coordinar tu pedido.</p>
     </fieldset>
   </form>
 </dialog>
@@ -85,8 +112,10 @@ const ambas = pedidos.envio && pedidos.retiro;
     display: flex; justify-content: center;
   }
   .barra[hidden] { display: none; }
-  /* En escritorio alcanza con el botón del header. */
+  /* En escritorio alcanza con el botón del header. En celular, la página deja lugar abajo
+     para que la barra no tape el último producto ni el pie. */
   @media (min-width: 760px) { .barra { display: none; } }
+  @media (max-width: 759px) { :global(body:has(.barra:not([hidden]))) { padding-bottom: 88px; } }
   .barra__boton { width: min(100%, 480px); justify-content: space-between; box-shadow: var(--shadow); }
   .barra__resumen { font-weight: 500; }
 
@@ -104,10 +133,11 @@ const ambas = pedidos.envio && pedidos.retiro;
   }
   .carrito__vacio { color: var(--muted); }
   .carrito__items { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
-  .carrito__total {
-    display: flex; justify-content: space-between; padding-top: var(--s3);
-    border-top: 1px solid var(--line); font-size: var(--t-m);
-  }
+  .carrito__totales { display: grid; gap: var(--s1); }
+  .carrito__totales[hidden] { display: none; }
+  .carrito__fila { display: flex; justify-content: space-between; gap: var(--s3); color: var(--muted); }
+  .carrito__fila--fuerte { color: var(--ink); font-size: var(--t-m); }
+  .carrito__fila[hidden], .carrito__aviso[hidden], .campo[hidden] { display: none; }
   .carrito__datos { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s4); }
   .carrito__datos[hidden] { display: none; }
   .opciones { display: grid; gap: var(--s1); margin-top: var(--s1); }
@@ -119,14 +149,20 @@ const ambas = pedidos.envio && pedidos.retiro;
   .carrito__enviar { width: 100%; }
   .carrito__ayuda { font-size: var(--t-s); color: var(--muted); text-align: center; }
 
-  .carrito :global(.item) { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s3); align-items: center; }
-  .carrito :global(.item__nombre) { font-weight: 600; }
-  .carrito :global(.item__variante) { color: var(--muted); font-size: var(--t-s); }
-  .carrito :global(.item__cantidad) { display: inline-flex; align-items: center; gap: var(--s2); }
-  .carrito :global(.item__cantidad button) {
-    width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 999px;
-    background: var(--surface); color: var(--ink); font-size: 18px; cursor: pointer;
+  .carrito :global(.item) {
+    display: grid; grid-template-columns: 1fr auto; gap: var(--s2) var(--s3); align-items: start;
+    padding-bottom: var(--s3); border-bottom: 1px solid var(--line);
   }
+  .carrito :global(.item__nombre) { font-weight: 600; }
+  .carrito :global(.item__variante), .carrito :global(.item__detalle) { color: var(--muted); font-size: var(--t-s); }
+  .carrito :global(.item__detalle:empty), .carrito :global(.item__variante:empty) { display: none; }
+  .carrito :global(.item__cantidad) { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: var(--s2); }
+  .carrito :global(.item__cantidad span) { min-width: 2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .carrito :global(.item__cantidad button) {
+    width: 44px; height: 44px; border: 1px solid var(--control-border); border-radius: 999px;
+    background: var(--surface); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .carrito :global(.item__cantidad button:hover) { border-color: var(--brand); }
   .carrito :global(.item__subtotal) { font-weight: 600; text-align: right; }
 </style>
 

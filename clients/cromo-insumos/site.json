@@ -55,7 +55,9 @@
     "envio": true,
     "retiro": true,
     "avisoEnvio": "a coordinar según tu ubicación",
-    "pagoConEnvio": ["Transferencia"]
+    "pagoConEnvio": ["Transferencia"],
+    "localidades": ["Resistencia", "Fontana", "Barranqueras", "Puerto Vilelas"],
+    "nombreRetiro": "Retiro coordinado"
   },
   "bloques": ["Header", "Hero", "Cinta", "Categorias", "Catalogo", "Pasos", "FAQ", "Contacto", "Footer", "Carrito"],
   "pasos": [

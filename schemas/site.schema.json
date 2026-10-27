@@ -299,6 +299,19 @@
           "items": {
             "type": "string"
           }
+        },
+        "localidades": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "nombreRetiro": {
+          "default": "Retiro en el local",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [

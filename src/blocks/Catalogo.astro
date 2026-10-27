@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { site, productos, foto } from '../lib/cliente';
 import { bloquesDe } from '../themes';
 import { formatoPrecio } from '../lib/precio';
+import OpcionesProducto from '../components/OpcionesProducto.astro';
 
 const conCarrito = bloquesDe(site).includes('Carrito');
 const conTurno = bloquesDe(site).includes('Turno');
@@ -64,6 +65,7 @@ const SIZES = {
                       </select>
                     </div>
                   )}
+                  {p.opciones && p.disponible && conCarrito && <OpcionesProducto producto={p} />}
                   <div class="card__precios">
                     <p class="card__precio">
                       {p.variantes.length === 1 && v.nombre !== 'Unidad' && <span class="card__variante">{v.nombre}</span>}
@@ -148,11 +150,12 @@ const SIZES = {
   .card__ahorro { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--t-s); }
   .card__ahorro[hidden] { display: none; }
   .card__ahorro s { color: var(--muted); }
-  /* El botón reserva el ancho de las dos leyendas: al pasar a "Agregado" no se mueve nada. */
+  /* El botón reserva el ancho de las dos leyendas: al pasar a "Agregado" no se mueve nada.
+     Se esconde con opacidad (no con visibility) para que el botón no se quede sin nombre. */
   .card__agregar { display: inline-grid; width: 100%; }
   .card__agregar > span { grid-area: 1 / 1; }
-  .card__agregar-listo, .card__agregar[data-listo] .card__agregar-texto { visibility: hidden; }
-  .card__agregar[data-listo] .card__agregar-listo { visibility: visible; }
+  .card__agregar-listo, .card__agregar[data-listo] .card__agregar-texto { opacity: 0; }
+  .card__agregar[data-listo] .card__agregar-listo { opacity: 1; }
 
   @media (min-width: 600px) {
     .card { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; padding: 0; overflow: hidden; }
@@ -182,23 +185,6 @@ const SIZES = {
 </style>
 
 <script>
-  import { formatoPrecio } from '../lib/precio';
-  // Al cambiar la presentación, el precio grande (y el ahorro) muestran la elegida.
-  const catalogo = document.querySelector<HTMLElement>('#catalogo');
-  if (catalogo) {
-    const $ = (n: number) => formatoPrecio(n, catalogo.dataset.moneda, catalogo.dataset.idioma);
-    catalogo.addEventListener('change', (e) => {
-      const select = (e.target as HTMLElement).closest<HTMLSelectElement>('[data-variante]');
-      const card = select?.closest<HTMLElement>('[data-producto]');
-      const boton = card?.querySelector<HTMLElement>('[data-agregar]');
-      if (!select || !card || !boton) return;
-      const v: { precio: number; precioAntes?: number } = JSON.parse(boton.dataset.variantes!)[Number(select.value)];
-      card.querySelector('[data-precio]')!.textContent = $(v.precio);
-      card.querySelector('[data-ahorro]')!.toggleAttribute('hidden', !v.precioAntes);
-      if (v.precioAntes) {
-        card.querySelector('[data-antes]')!.textContent = $(v.precioAntes);
-        card.querySelector('[data-ahorras]')!.textContent = $(v.precioAntes - v.precio);
-      }
-    });
-  }
+  import { iniciarFichas } from '../scripts/ficha';
+  iniciarFichas();
 </script>

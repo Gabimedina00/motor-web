@@ -48,6 +48,19 @@ describe('esquemas', () => {
     expect(productosSchema.safeParse(roto).success).toBe(false);
   });
 
+  it('rechaza un pack con "unidades" sin decir cómo se llama la unidad', () => {
+    const roto = structuredClone(base);
+    const guantes = roto.productos.find((p: { id: string }) => p.id === 'guantes-jardin');
+    delete guantes.opciones.unidad;
+    expect(productosSchema.safeParse(roto).success).toBe(false);
+  });
+
+  it('rechaza talles cargados en el color y en el producto a la vez', () => {
+    const roto = structuredClone(base);
+    roto.productos.find((p: { id: string }) => p.id === 'guantes-jardin').opciones.talles = ['M'];
+    expect(productosSchema.safeParse(roto).success).toBe(false);
+  });
+
   it('rechaza una foto sin alt', () => {
     const roto = structuredClone(base);
     delete roto.productos[0].alt;

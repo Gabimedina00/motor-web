@@ -36,7 +36,8 @@
     "envio": true,
     "retiro": true,
     "avisoEnvio": "se cotiza según la distancia",
-    "pagoConEnvio": ["Transferencia"]
+    "pagoConEnvio": ["Transferencia"],
+    "localidades": ["Resistencia", "Barranqueras", "Fontana"]
   },
   "faq": [
     { "pregunta": "¿Cuánto cuesta el envío?", "respuesta": "Depende de la distancia. Cuando recibimos tu pedido por WhatsApp te pasamos el costo antes de confirmar." },

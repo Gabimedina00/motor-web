@@ -1,0 +1,141 @@
+---
+// Color y talle dentro de una ficha del catálogo, y el reparto de un pack mixto.
+// La lógica está en src/scripts/ficha.ts.
+import type { Producto } from '../schemas/productos';
+
+interface Props {
+  producto: Producto;
+}
+const { producto: p } = Astro.props;
+const op = p.opciones!;
+const talles = op.talles ?? [...new Set(op.colores?.flatMap((c) => c.talles ?? []) ?? [])];
+// Cada combinación que existe de verdad: "Rosa S", "Negro M"... o solo el color, o solo el talle.
+const combos = op.colores
+  ? op.colores.flatMap((c) => {
+      const suyos = c.talles ?? op.talles;
+      return suyos ? suyos.map((t) => ({ texto: `${c.nombre} ${t}`, muestra: c.muestra })) : [{ texto: c.nombre, muestra: c.muestra }];
+    })
+  : talles.map((t) => ({ texto: `Talle ${t}`, muestra: undefined }));
+const hayPacks = combos.length > 1 && p.variantes.some((v) => (v.unidades ?? 1) > 1);
+const queSeElige = op.colores && talles.length ? ['Mismo color y talle', 'colores y talles'] : op.colores ? ['Mismo color', 'colores'] : ['Mismo talle', 'talles'];
+---
+
+{(op.colores || talles.length > 0) && (
+  <div class="opciones" data-opciones={JSON.stringify(op)}>
+    {hayPacks && (
+      <fieldset class="eleccion" data-modo hidden={(p.variantes[0].unidades ?? 1) < 2}>
+        <legend>Armado del pack</legend>
+        <div class="eleccion__chips">
+          <label class="chip"><input type="radio" name={`modo-${p.id}`} value="mismo" data-modo-opcion checked /><span>{queSeElige[0]}</span></label>
+          <label class="chip"><input type="radio" name={`modo-${p.id}`} value="combinar" data-modo-opcion /><span>Combinar {queSeElige[1]}</span></label>
+        </div>
+      </fieldset>
+    )}
+
+    <div class="opciones__simple" data-simple>
+      {op.colores && (
+        <fieldset class="eleccion">
+          <legend>Color</legend>
+          <div class="eleccion__chips">
+            {op.colores.map((c) => (
+              <label class="chip">
+                <input type="radio" name={`color-${p.id}`} value={c.nombre} data-color />
+                <span class="muestra" style={`--muestra: ${c.muestra}`} aria-hidden="true"></span>
+                <span>{c.nombre}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+      {talles.length > 0 && (
+        <fieldset class="eleccion">
+          <legend>Talle</legend>
+          <div class="eleccion__chips">
+            {talles.map((t) => (
+              <label class="chip chip--talle"><input type="radio" name={`talle-${p.id}`} value={t} data-talle /><span>{t}</span></label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+    </div>
+
+    {hayPacks && (
+      <div class="mezcla" data-mezcla hidden>
+        <p class="mezcla__estado" data-mezcla-estado aria-live="polite"></p>
+        <ul class="mezcla__filas">
+          {combos.map((c) => (
+            <li class="mezcla__fila" data-combo={c.texto}>
+              <span class="mezcla__nombre">
+                {c.muestra && <span class="muestra" style={`--muestra: ${c.muestra}`} aria-hidden="true"></span>}
+                {c.texto}
+              </span>
+              <span class="paso">
+                <button type="button" data-paso="-1" aria-label={`${c.texto}: quitar 1`} disabled>−</button>
+                <span class="paso__n" data-n>0</span>
+                <button type="button" data-paso="1" aria-label={`${c.texto}: sumar 1`}>+</button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <p class="opciones__error" data-opciones-error role="alert"></p>
+  </div>
+)}
+
+<style>
+  .opciones { display: grid; gap: var(--s3); }
+  .opciones__simple { display: grid; gap: var(--s3); }
+  .opciones [hidden] { display: none; }
+  .eleccion { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .eleccion legend { margin-bottom: var(--s2); padding: 0; font-size: var(--t-s); font-weight: 600; }
+  .eleccion__chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+
+  /* Cada opción es una pastilla de 44 px de alto. La elegida lleva borde doble, fondo y una tilde:
+     no depende solo del color. La que no existe en ese color se ve tachada. */
+  .chip {
+    position: relative; display: inline-flex; align-items: center; gap: var(--s2);
+    min-height: 44px; padding: 0 var(--s3); border: 1px solid var(--control-border); border-radius: 999px;
+    font-size: var(--t-s); font-weight: 600; color: var(--ink); cursor: pointer;
+  }
+  .chip--talle { min-width: 44px; justify-content: center; }
+  .chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: inherit; }
+  .chip:hover { border-color: var(--brand); }
+  .chip:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .chip:has(input:checked) {
+    border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand);
+    background: color-mix(in srgb, var(--brand) 16%, transparent);
+  }
+  .chip:has(input:checked)::after {
+    content: '✓'; position: absolute; top: -7px; right: -5px; display: grid; place-items: center;
+    width: 18px; height: 18px; border-radius: 999px; background: var(--brand); color: var(--brand-ink);
+    font-size: 11px; font-weight: 800;
+  }
+  .chip:has(input:disabled) {
+    border-style: dashed; border-color: var(--line); color: var(--muted);
+    text-decoration: line-through; cursor: not-allowed;
+  }
+  .muestra {
+    width: 18px; height: 18px; flex: none; border-radius: 999px;
+    background: var(--muestra); box-shadow: inset 0 0 0 1px var(--control-border);
+  }
+
+  .mezcla { display: grid; gap: var(--s2); }
+  .mezcla__estado { font-size: var(--t-s); font-weight: 600; }
+  .mezcla__filas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s1) var(--s4); }
+  @media (min-width: 600px) { .mezcla__filas { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); } }
+  .mezcla__fila { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding-block: 2px; }
+  .mezcla__nombre { display: inline-flex; align-items: center; gap: var(--s2); font-size: var(--t-s); font-weight: 600; }
+  .paso { display: inline-flex; align-items: center; gap: var(--s1); }
+  .paso button {
+    width: 44px; height: 44px; border: 1px solid var(--control-border); border-radius: 999px;
+    background: transparent; color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .paso button:hover:not(:disabled) { border-color: var(--brand); }
+  .paso button:disabled { border-style: dashed; border-color: var(--line); color: var(--muted); cursor: not-allowed; }
+  .paso__n { min-width: 2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .opciones__error { color: var(--error); font-size: var(--t-s); font-weight: 600; }
+  .opciones__error:empty { display: none; }
+</style>

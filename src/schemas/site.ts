@@ -117,6 +117,10 @@ export const siteSchema = z
         retiro: z.boolean().default(true),
         avisoEnvio: z.string().optional(),
         pagoConEnvio: z.array(z.string()).optional(),
+        // Zonas de envío para elegir en el pedido. Siempre se suma "Otra zona (consultar)".
+        localidades: z.array(z.string().min(1)).min(1).optional(),
+        // Cómo se llama el retiro en el pedido, por ejemplo "Retiro coordinado".
+        nombreRetiro: z.string().min(1).default('Retiro en el local'),
       })
       .refine((p) => p.envio || p.retiro, 'Activá envío, retiro o ambos')
       .optional(),

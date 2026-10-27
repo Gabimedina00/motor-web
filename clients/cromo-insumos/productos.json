@@ -11,6 +11,7 @@
       "descripcion": "1 pack de compresas Ktex negras x50 + 1 caja de guantes de nitrilo negros x100.",
       "foto": "combo-full-negro.jpg", "alt": "Paquete de compresas Ktex negras junto a una mano con guante de nitrilo negro",
       "idealPara": ["tatuajes", "manicura", "estética"],
+      "opciones": { "talles": ["M", "L"] },
       "variantes": [{ "nombre": "Combo de 2 productos", "precio": 15000, "precioAntes": 17000 }]
     },
     {
@@ -18,6 +19,7 @@
       "descripcion": "1 pack de compresas Ktex rosa x50 + 1 caja de guantes de nitrilo rosa x100.",
       "foto": "combo-full-rosa-x2.jpg", "alt": "Paquete de compresas Ktex rosa junto a una mano con guante de nitrilo rosa",
       "idealPara": ["pestañas", "manicura", "estética"],
+      "opciones": { "talles": ["S", "M"] },
       "variantes": [{ "nombre": "Combo de 2 productos", "precio": 15000, "precioAntes": 17000 }]
     },
     {
@@ -25,19 +27,29 @@
       "descripcion": "1 pack de compresas Ktex rosa x50 + 1 pack de barbijos x25 + 1 caja de guantes de nitrilo rosa x100.",
       "foto": "combo-full-rosa-x3.jpg", "alt": "Compresas Ktex, un barbijo rosa y una mano con guante de nitrilo rosa",
       "idealPara": ["pestañas", "odontología", "estética"],
+      "opciones": { "talles": ["S", "M"] },
       "variantes": [{ "nombre": "Combo de 3 productos", "precio": 21600, "precioAntes": 24000 }]
     },
     {
       "id": "guantes-nitrilo-cromo", "nombre": "Guantes de nitrilo Cromo", "categoria": "guantes", "etiqueta": "Marca Cromo",
-      "descripcion": "Caja de 100 guantes de nitrilo, sin polvo y texturados. Rosa (S y M), celeste (S, M y L), negro (M y L) y blanco (M). Podés combinar colores y talles: anotalo en tu pedido.",
-      "foto": "guantes-cajas.jpg", "alt": "Cajas de guantes de nitrilo Cromo en rosa, blanco, negro y celeste",
+      "descripcion": "Caja de 100 guantes de nitrilo, sin polvo y texturados. En rosa, celeste, negro y blanco. Desde 2 cajas podés combinar colores y talles.",
+      "foto": "guantes-cajas.jpg", "alt": "Cajas de guantes de nitrilo Cromo en rosa, blanco, negro y celeste", "fondo": "#000000",
       "idealPara": ["manicura", "tatuajes", "odontología", "gastronomía"],
+      "opciones": {
+        "unidad": { "singular": "caja", "plural": "cajas" },
+        "colores": [
+          { "nombre": "Rosa", "muestra": "#f06aa8", "talles": ["S", "M"] },
+          { "nombre": "Celeste", "muestra": "#6ec6ea", "talles": ["S", "M", "L"] },
+          { "nombre": "Negro", "muestra": "#111216", "talles": ["M", "L"] },
+          { "nombre": "Blanco", "muestra": "#f4f5f7", "talles": ["M"] }
+        ]
+      },
       "variantes": [
-        { "nombre": "1 caja", "precio": 10000 },
-        { "nombre": "2 cajas", "precio": 19000, "precioAntes": 20000 },
-        { "nombre": "3 cajas", "precio": 27000, "precioAntes": 30000 },
-        { "nombre": "5 cajas", "precio": 43500, "precioAntes": 50000 },
-        { "nombre": "10 cajas", "precio": 80000, "precioAntes": 100000 }
+        { "nombre": "1 caja", "precio": 10000, "unidades": 1 },
+        { "nombre": "2 cajas", "precio": 19000, "precioAntes": 20000, "unidades": 2 },
+        { "nombre": "3 cajas", "precio": 27000, "precioAntes": 30000, "unidades": 3 },
+        { "nombre": "5 cajas", "precio": 43500, "precioAntes": 50000, "unidades": 5 },
+        { "nombre": "10 cajas", "precio": 80000, "precioAntes": 100000, "unidades": 10 }
       ]
     },
     {
@@ -45,6 +57,13 @@
       "descripcion": "Pack de 50 compresas descartables, con 1 capa impermeable y 1 absorbente. En rosa, blanca o negra. Producto médico de venta libre.",
       "foto": "compresas-ktex.jpg", "alt": "Paquetes de compresas Ktex rosa, blanca y negra",
       "idealPara": ["tatuajes", "odontología", "estética"],
+      "opciones": {
+        "colores": [
+          { "nombre": "Rosa", "muestra": "#f06aa8" },
+          { "nombre": "Blanca", "muestra": "#f4f5f7" },
+          { "nombre": "Negra", "muestra": "#111216" }
+        ]
+      },
       "variantes": [{ "nombre": "Pack x50", "precio": 7000 }]
     },
     {
