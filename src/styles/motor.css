@@ -12,6 +12,8 @@
   --radius-button: 999px;
   --shadow: 0 2px 8px rgb(0 0 0 / 0.08);
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --brand-ink: #fff; /* texto sobre --brand */
+  --surface-raised: var(--surface-alt); /* hover de superficies */
   /* Grises del efecto cromado de la portada (hero.efecto = "esfera"). */
   --cromo-claro: #f4f5f6;
   --cromo-medio: #8a8f96;
@@ -34,7 +36,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html {
-  scroll-padding-top: calc(var(--header-h) + 56px);
+  /* --alto-barras lo mide el bloque Categorias; sin él alcanza con el alto del header. */
+  scroll-padding-top: calc(var(--alto-barras, var(--header-h)) + var(--s3));
   scroll-padding-bottom: 88px; /* barra del pedido en móvil */
   -webkit-text-size-adjust: 100%;
 }
