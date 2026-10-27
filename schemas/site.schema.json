@@ -55,10 +55,19 @@
         "promo": {
           "type": "string"
         },
+        "apoyo": {
+          "type": "string"
+        },
+        "botonPrincipal": {
+          "type": "string"
+        },
+        "botonWhatsApp": {
+          "type": "string"
+        },
         "efecto": {
           "type": "string",
           "enum": [
-            "esfera"
+            "emblema"
           ]
         },
         "foto": {
@@ -113,6 +122,17 @@
             "alt"
           ]
         },
+        "lema": {
+          "type": "string"
+        },
+        "esquema": {
+          "default": "claro",
+          "type": "string",
+          "enum": [
+            "claro",
+            "oscuro"
+          ]
+        },
         "tokens": {
           "default": {},
           "type": "object",
@@ -146,6 +166,42 @@
               "pattern": "^#[0-9a-fA-F]{6}$"
             },
             "accentInk": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "brandInk": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "surfaceRaised": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "line": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "controlBorder": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "focus": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "link": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "promo": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "promoInk": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "error": {
               "type": "string",
               "pattern": "^#[0-9a-fA-F]{6}$"
             },
@@ -243,6 +299,19 @@
           "items": {
             "type": "string"
           }
+        },
+        "localidades": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "nombreRetiro": {
+          "default": "Retiro en el local",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -257,6 +326,7 @@
           "Header",
           "Hero",
           "Cinta",
+          "Pasos",
           "Categorias",
           "Catalogo",
           "Carrito",
@@ -272,10 +342,64 @@
       }
     },
     "cinta": {
+      "type": "object",
+      "properties": {
+        "frases": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "nota": {
+          "type": "string"
+        },
+        "animada": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "frases"
+      ]
+    },
+    "compartir": {
+      "type": "object",
+      "properties": {
+        "foto": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "foto",
+        "alt"
+      ]
+    },
+    "pasos": {
+      "maxItems": 5,
       "type": "array",
       "items": {
-        "type": "string",
-        "minLength": 1
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "texto": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "titulo",
+          "texto"
+        ]
       }
     },
     "galeria": {

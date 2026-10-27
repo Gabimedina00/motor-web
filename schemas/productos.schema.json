@@ -59,30 +59,79 @@
             "type": "string",
             "pattern": "^#[0-9a-fA-F]{6}$"
           },
-          "paraQuien": {
-            "maxItems": 6,
+          "idealPara": {
+            "maxItems": 4,
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "oficio": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "para": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "oficio",
-                "para"
-              ]
+              "type": "string",
+              "minLength": 1
             }
           },
           "disponible": {
             "default": true,
             "type": "boolean"
+          },
+          "opciones": {
+            "type": "object",
+            "properties": {
+              "colores": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nombre": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "muestra": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-fA-F]{6}$"
+                    },
+                    "talles": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  },
+                  "required": [
+                    "nombre",
+                    "muestra"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "talles": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "unidad": {
+                "type": "object",
+                "properties": {
+                  "singular": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "plural": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "singular",
+                  "plural"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
           },
           "variantes": {
             "minItems": 1,
@@ -101,6 +150,11 @@
                 "precioAntes": {
                   "type": "number",
                   "exclusiveMinimum": 0
+                },
+                "unidades": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
                 }
               },
               "required": [

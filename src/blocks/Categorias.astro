@@ -6,48 +6,128 @@ const categorias = (productos?.categorias ?? []).filter((c) =>
 ---
 
 {categorias.length > 1 && (
-  <nav class="categorias" aria-label="Categorías del catálogo">
+  <nav class="categorias" aria-label="Categorías del catálogo" data-categorias>
     <ul class="contenedor categorias__lista">
-      {categorias.map((c) => <li><a href={`#cat-${c.id}`}>{c.nombre}</a></li>)}
+      {categorias.map((c) => (
+        <li><a href={`#cat-${c.id}`}><span data-texto={c.nombre}>{c.nombre}</span></a></li>
+      ))}
     </ul>
   </nav>
 )}
 
 <style>
+  /* Alto de header + esta barra antes de que el script lo mida (44px de atajo + 16px de aire + borde). */
+  :global(html:has([data-categorias])) { --alto-barras: calc(var(--header-h) + 61px); }
   .categorias {
     position: sticky; top: var(--header-h); z-index: 15;
     background: var(--surface); border-bottom: 1px solid var(--line);
   }
   .categorias__lista {
     display: flex; gap: var(--s2); overflow-x: auto; scrollbar-width: none;
-    list-style: none; margin-block: 0; padding: var(--s3) 0;
+    list-style: none; margin-block: 0; padding: var(--s2) 0;
   }
   .categorias__lista::-webkit-scrollbar { display: none; }
   .categorias a {
-    display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s4);
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--s4);
     border: 1px solid var(--line); border-radius: 999px;
     color: var(--ink); text-decoration: none; white-space: nowrap; font-weight: 500;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
   }
-  .categorias a:hover, .categorias a[aria-current='true'] {
-    background: var(--brand); border-color: var(--brand); color: #fff;
+  /* Reserva el ancho del texto en negrita: marcar la categoría no mueve los demás atajos. */
+  .categorias span { display: inline-grid; }
+  .categorias span::after { content: attr(data-texto); font-weight: 700; height: 0; visibility: hidden; overflow: hidden; }
+  .categorias a:hover { background: var(--surface-raised); border-color: var(--brand); }
+  /* La sección actual tiene relleno, negrita y subrayado: se reconoce sin depender solo del color. */
+  .categorias a[aria-current='location'] {
+    background: var(--brand); border-color: var(--brand); color: var(--brand-ink); font-weight: 700;
+    text-decoration: underline 2px; text-underline-offset: 5px;
   }
 </style>
 
 <script>
-  // Marca la categoría visible mientras se scrollea.
-  const enlaces = [...document.querySelectorAll<HTMLAnchorElement>('.categorias a')];
-  const observador = new IntersectionObserver(
-    (entradas) => {
-      for (const e of entradas) {
-        if (!e.isIntersecting) continue;
-        enlaces.forEach((a) => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
-        enlaces.find((a) => a.hash === `#${e.target.id}`)?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  // Marca el atajo de la sección que se está viendo. Nunca mueve la página: solo cambia
+  // aria-current y, si hace falta, desliza la lista de atajos de costado.
+  const nav = document.querySelector<HTMLElement>('[data-categorias]');
+  if (nav) {
+    const lista = nav.querySelector<HTMLElement>('.categorias__lista')!;
+    const header = document.querySelector<HTMLElement>('.header');
+    const pares = [...nav.querySelectorAll<HTMLAnchorElement>('a')]
+      .map((a) => [a, document.querySelector<HTMLElement>(a.hash)] as const)
+      .filter((par): par is readonly [HTMLAnchorElement, HTMLElement] => !!par[1]);
+    const menosMovimiento = matchMedia('(prefers-reduced-motion: reduce)');
+    let alto = 0;
+    let actual: HTMLAnchorElement | null = null;
+    let elegido: HTMLAnchorElement | null = null;
+    let espera = 0;
+    let pendiente = false;
+
+    // Alto real de las barras fijas: lo usa scroll-padding-top para que los títulos no queden tapados.
+    const medir = () => {
+      alto = (header?.offsetHeight ?? 0) + nav.offsetHeight;
+      document.documentElement.style.setProperty('--alto-barras', `${alto}px`);
+    };
+
+    // Desliza solo la lista horizontal, y solo si el atajo quedó fuera de ella.
+    const revelar = (a: HTMLAnchorElement) => {
+      const caja = lista.getBoundingClientRect();
+      const item = a.getBoundingClientRect();
+      const margen = 8;
+      let corrimiento = 0;
+      if (item.left < caja.left + margen) corrimiento = item.left - caja.left - margen;
+      else if (item.right > caja.right - margen) corrimiento = item.right - caja.right + margen;
+      if (corrimiento) lista.scrollTo({ left: lista.scrollLeft + corrimiento, behavior: menosMovimiento.matches ? 'instant' : 'smooth' });
+    };
+
+    const marcarComoActual = (a: HTMLAnchorElement | null) => {
+      if (a === actual) return;
+      actual?.removeAttribute('aria-current');
+      a?.setAttribute('aria-current', 'location');
+      actual = a;
+      if (a) revelar(a);
+      // De vuelta arriba del catálogo, la lista vuelve a mostrar el primer atajo.
+      else if (pares[0][1].getBoundingClientRect().top > alto + 16)
+        lista.scrollTo({ left: 0, behavior: menosMovimiento.matches ? 'instant' : 'smooth' });
+    };
+
+    // La sección actual es la última cuyo comienzo ya pasó por debajo de las barras.
+    // Pasado el final del catálogo no queda ninguna marcada.
+    const seccionVisible = () => {
+      const linea = alto + 16;
+      let visible: HTMLAnchorElement | null = null;
+      for (const [a, seccion] of pares) if (seccion.getBoundingClientRect().top <= linea) visible = a;
+      if (pares.at(-1)![1].getBoundingClientRect().bottom < linea) visible = null;
+      return visible;
+    };
+
+    const alScrollear = () => {
+      // Mientras dura el desplazamiento de un clic, el atajo elegido queda fijo (sin saltar por las secciones del medio).
+      if (elegido) {
+        clearTimeout(espera);
+        espera = window.setTimeout(() => {
+          elegido = null;
+          marcarComoActual(seccionVisible());
+        }, 200);
+        return;
       }
-    },
-    { rootMargin: '-40% 0px -55% 0px' },
-  );
-  enlaces.forEach((a) => {
-    const destino = document.querySelector(a.hash);
-    if (destino) observador.observe(destino);
-  });
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(() => {
+        pendiente = false;
+        marcarComoActual(seccionVisible());
+      });
+    };
+
+    for (const [a] of pares) {
+      a.addEventListener('click', () => {
+        elegido = a;
+        marcarComoActual(a);
+        alScrollear();
+      });
+    }
+    new ResizeObserver(medir).observe(nav);
+    if (header) new ResizeObserver(medir).observe(header);
+    medir();
+    addEventListener('scroll', alScrollear, { passive: true });
+    marcarComoActual(seccionVisible());
+  }
 </script>

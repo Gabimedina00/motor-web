@@ -1,28 +1,51 @@
 ---
 import { site } from '../lib/cliente';
-const frases = site.cinta ?? [];
+const cinta = site.cinta;
 ---
 
-{frases.length > 0 && (
-  <div class="cinta">
-    <p class="solo-lectores">{frases.join('. ')}</p>
-    <div class="cinta__pista" aria-hidden="true">
-      {[0, 1].map(() => (
-        <ul>{frases.map((f) => <li>{f}</li>)}</ul>
-      ))}
+{cinta && (
+  cinta.animada ? (
+    <div class="cinta cinta--animada">
+      <p class="solo-lectores">{cinta.frases.join('. ')}</p>
+      <div class="cinta__pista" aria-hidden="true">
+        {[0, 1].map(() => (
+          <ul>{cinta.frases.map((f) => <li>{f}</li>)}</ul>
+        ))}
+      </div>
+      {cinta.nota && <p class="cinta__nota">{cinta.nota}</p>}
     </div>
-  </div>
+  ) : (
+    <div class="cinta cinta--fija">
+      <ul class="contenedor">{cinta.frases.map((f) => <li>{f}</li>)}</ul>
+      {cinta.nota && <p class="contenedor cinta__nota">{cinta.nota}</p>}
+    </div>
+  )
 )}
 
 <style>
-  .cinta { overflow: hidden; background: var(--accent); color: var(--accent-ink); border-block: 1px solid var(--ink); }
-  .cinta__pista { display: flex; width: max-content; }
+  .cinta { border-block: 1px solid var(--line); }
   .cinta ul { display: flex; margin: 0; padding: 0; list-style: none; }
-  .cinta li {
+  .cinta__nota { padding-bottom: var(--s3); font-size: var(--t-s); color: var(--muted); text-align: center; }
+
+  /* Franja fija: frases cortas, centradas, que se acomodan en varias líneas en celular. */
+  .cinta--fija { background: var(--surface-alt); }
+  .cinta--fija ul { flex-wrap: wrap; justify-content: center; gap: var(--s1) var(--s4); padding-block: var(--s4) var(--s2); }
+  .cinta--fija li {
+    display: flex; align-items: center; gap: var(--s4);
+    font: 650 var(--t-s) / 1.3 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .cinta--fija li + li::before { content: '✦'; color: var(--accent); font-size: 12px; }
+  .cinta--fija:not(:has(.cinta__nota)) ul { padding-bottom: var(--s4); }
+
+  /* Cinta en movimiento (cinta.animada = true). */
+  .cinta--animada { overflow: hidden; background: var(--accent); color: var(--accent-ink); border-color: var(--ink); }
+  .cinta__pista { display: flex; width: max-content; }
+  .cinta--animada li {
     display: flex; align-items: center; gap: var(--s5); padding: var(--s3) var(--s5) var(--s3) 0;
     font: 700 var(--t-m) / 1.2 var(--font-display); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.02em;
   }
-  .cinta li::after { content: '✦'; font-size: var(--t-s); }
+  .cinta--animada li::after { content: '✦'; font-size: var(--t-s); }
+  .cinta--animada .cinta__nota { color: inherit; padding-top: 0; }
   @media (prefers-reduced-motion: no-preference) {
     .cinta__pista { animation: correr 28s linear infinite; }
     @keyframes correr { to { translate: -50% 0; } }

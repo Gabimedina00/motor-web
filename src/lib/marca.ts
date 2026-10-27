@@ -1,10 +1,11 @@
-import '@fontsource-variable/inter';
-import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource-variable/fraunces';
+// Las dos fuentes del cliente: astro.config.mjs apunta cada alias al paquete que corresponde,
+// así el sitio no carga familias que no usa.
+import '@fuente-display';
+import '@fuente-texto';
 import type { Site, Tokens } from '../schemas/site';
 
-// Para sumar una fuente: instalá su paquete de @fontsource-variable, importalo arriba,
-// agregala acá y en FUENTES (src/schemas/site.ts).
+// Para sumar una fuente: instalá su paquete de @fontsource-variable, sumalo en PAQUETES
+// (astro.config.mjs), acá y en FUENTES (src/schemas/site.ts).
 const FAMILIAS: Record<Site['marca']['fuentes']['display'], string> = {
   Inter: "'Inter Variable', system-ui, sans-serif",
   'Bricolage Grotesque': "'Bricolage Grotesque Variable', system-ui, sans-serif",
@@ -20,6 +21,15 @@ const VARIABLES: Record<keyof Tokens, string> = {
   surfaceAlt: '--surface-alt',
   accent: '--accent',
   accentInk: '--accent-ink',
+  brandInk: '--brand-ink',
+  surfaceRaised: '--surface-raised',
+  line: '--line',
+  controlBorder: '--control-border',
+  focus: '--focus',
+  link: '--link',
+  promo: '--promo',
+  promoInk: '--promo-ink',
+  error: '--error',
   radiusCard: '--radius-card',
   radiusButton: '--radius-button',
 };

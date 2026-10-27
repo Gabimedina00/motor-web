@@ -12,7 +12,15 @@
   --radius-button: 999px;
   --shadow: 0 2px 8px rgb(0 0 0 / 0.08);
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
-  /* Grises del efecto cromado de la portada (hero.efecto = "esfera"). */
+  --brand-ink: #fff; /* texto sobre --brand */
+  --surface-raised: var(--surface-alt); /* hover de superficies */
+  --control-border: color-mix(in srgb, var(--ink) 25%, transparent);
+  --focus: var(--brand);
+  --link: var(--brand-strong);
+  --promo: var(--accent);
+  --promo-ink: var(--accent-ink);
+  --error: #b91c1c;
+  /* Grises del cromado (texto resaltado en esquema oscuro). */
   --cromo-claro: #f4f5f6;
   --cromo-medio: #8a8f96;
   --cromo-oscuro: #17181b;
@@ -34,11 +42,14 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html {
-  scroll-padding-top: calc(var(--header-h) + 56px);
+  /* --alto-barras lo mide el bloque Categorias; sin él alcanza con el alto del header. */
+  scroll-padding-top: calc(var(--alto-barras, var(--header-h)) + var(--s3));
   scroll-padding-bottom: 88px; /* barra del pedido en móvil */
   -webkit-text-size-adjust: 100%;
 }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* Esquema oscuro (marca.esquema = "oscuro"): controles nativos, barras de scroll y diálogos en oscuro. */
+html[data-esquema='oscuro'] { color-scheme: dark; }
 body {
   margin: 0;
   background: var(--surface);
@@ -52,8 +63,8 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; text
 h2 { font-size: var(--t-xl); }
 h3 { font-size: var(--t-m); }
 p { margin: 0; }
-a { color: var(--brand-strong); }
-:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+a { color: var(--link); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 .contenedor { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
 .seccion { padding-block: var(--s7); }
@@ -65,12 +76,17 @@ a { color: var(--brand-strong); }
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
   min-height: 44px; padding: 0 var(--s5);
   border: 2px solid var(--brand); border-radius: var(--radius-button);
-  background: var(--brand); color: #fff;
+  background: var(--brand); color: var(--brand-ink);
   font: 600 var(--t-base) / 1 var(--font-text); text-decoration: none; cursor: pointer;
+  transition: background-color 0.18s, border-color 0.18s, color 0.18s, scale 0.12s;
 }
 .boton:hover { background: var(--brand-strong); border-color: var(--brand-strong); }
-.boton--secundario { background: transparent; color: var(--brand-strong); }
-.boton--secundario:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--brand-strong); }
+.boton:active { scale: 0.98; }
+.boton--secundario { background: transparent; color: var(--link); }
+.boton--secundario:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--link); }
+/* En esquema oscuro el botón secundario es neutro, para que el color quede en la acción principal. */
+[data-esquema='oscuro'] .boton--secundario { color: var(--ink); border-color: var(--control-border); }
+[data-esquema='oscuro'] .boton--secundario:hover { color: var(--ink); border-color: var(--brand); background: var(--surface-raised); }
 .boton--chico { min-height: 40px; padding: 0 var(--s4); font-size: var(--t-s); }
 
 .badge {
@@ -78,6 +94,7 @@ a { color: var(--brand-strong); }
   background: var(--accent); color: var(--accent-ink);
   font-size: var(--t-s); font-weight: 600; line-height: 1.4; white-space: nowrap;
 }
+.badge--promo { background: var(--promo); color: var(--promo-ink); }
 .badge--abierto { background: #dcfce7; color: #14532d; }
 .badge--cerrado { background: var(--surface-alt); color: var(--muted); }
 
@@ -85,10 +102,11 @@ a { color: var(--brand-strong); }
 .campo label, .campo legend { font-size: var(--t-s); font-weight: 600; }
 .campo input:not([type='radio'], [type='checkbox']), .campo select, .campo textarea {
   min-height: 44px; padding: var(--s2) var(--s3);
-  border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 8px;
+  border: 1px solid var(--control-border); border-radius: 8px;
   background: var(--surface); color: var(--ink); font: inherit;
 }
 .campo textarea { min-height: 72px; resize: vertical; }
+.campo [aria-invalid='true'] { border-color: var(--error); box-shadow: inset 0 0 0 1px var(--error); }
 .campo input[type='radio'], .campo input[type='checkbox'] { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
 
 .solo-lectores {
@@ -96,14 +114,9 @@ a { color: var(--brand-strong); }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* Aparición suave al hacer scroll, solo en navegadores que lo soportan y sin pedido de menos movimiento. */
+/* Aparición suave, una sola vez, cuando el elemento entra en pantalla. La clase la pone el script
+   de Base.astro: sin JS (o con menos movimiento) todo se ve desde el principio. */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .revelar {
-      animation: revelar linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
-    }
-    @keyframes revelar { from { opacity: 0; translate: 0 32px; } }
-  }
+  .js-revelar .revelar { transition: opacity 0.35s ease, translate 0.35s ease; }
+  .js-revelar .revelar:not(.revelado) { opacity: 0; translate: 0 10px; }
 }

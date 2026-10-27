@@ -6,6 +6,7 @@
     { "id": "suculentas", "nombre": "Suculentas y cactus" },
     { "id": "macetas", "nombre": "Macetas" },
     { "id": "sustratos", "nombre": "Sustratos" },
+    { "id": "jardineria", "nombre": "Jardinería" },
     { "id": "combos", "nombre": "Combos" }
   ],
   "productos": [
@@ -25,11 +26,7 @@
       "id": "sansevieria", "nombre": "Sansevieria", "categoria": "interior",
       "descripcion": "La más fácil de cuidar: aguanta poca luz y se riega cada 15 días.",
       "foto": "sansevieria.jpg", "alt": "Sansevieria de hojas largas en maceta negra",
-      "paraQuien": [
-        { "oficio": "Departamentos", "para": "Aguanta poca luz y aire acondicionado" },
-        { "oficio": "Oficinas", "para": "Se riega cada 15 días, ideal si nadie se acuerda" },
-        { "oficio": "Principiantes", "para": "La planta más difícil de matar" }
-      ],
+      "idealPara": ["departamentos", "oficinas", "principiantes"],
       "variantes": [{ "nombre": "Maceta 17 cm", "precio": 9800 }]
     },
     {
@@ -74,6 +71,21 @@
       "id": "perlita", "nombre": "Perlita", "categoria": "sustratos",
       "descripcion": "Mejora el drenaje. Mezclala con el sustrato para suculentas.",
       "variantes": [{ "nombre": "Bolsa 5 dm³", "precio": 3900 }]
+    },
+    {
+      "id": "guantes-jardin", "nombre": "Guantes de jardinería", "categoria": "jardineria",
+      "descripcion": "De algodón con palma engomada. Se lavan a mano.",
+      "opciones": {
+        "unidad": { "singular": "par", "plural": "pares" },
+        "colores": [
+          { "nombre": "Verde", "muestra": "#2f5d3a", "talles": ["S", "M"] },
+          { "nombre": "Negro", "muestra": "#18211b", "talles": ["M", "L"] }
+        ]
+      },
+      "variantes": [
+        { "nombre": "1 par", "precio": 3500, "unidades": 1 },
+        { "nombre": "Pack x 3 pares", "precio": 9000, "precioAntes": 10500, "unidades": 3 }
+      ]
     },
     {
       "id": "combo-primera-planta", "nombre": "Combo primera planta", "categoria": "combos",

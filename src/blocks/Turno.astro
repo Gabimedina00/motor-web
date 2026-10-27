@@ -43,7 +43,7 @@ const servicios = (productos?.productos ?? []).filter((p) => p.disponible).map((
 <style>
   .turno__form { display: grid; gap: var(--s4); max-width: 640px; }
   @media (min-width: 600px) { .turno__form { grid-template-columns: 1fr 1fr; } .turno__ancho { grid-column: 1 / -1; } }
-  .turno__error { color: #b91c1c; font-weight: 600; }
+  .turno__error { color: var(--error); font-weight: 600; }
   .turno__error:empty { display: none; }
 </style>
 

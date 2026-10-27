@@ -1,52 +1,60 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { site, foto } from '../lib/cliente';
 import { bloquesDe } from '../themes';
 import { linkWhatsApp } from '../lib/whatsapp';
 
 const activos = bloquesDe(site);
+const h = site.hero;
 const principal = activos.includes('Catalogo')
-  ? { href: '#catalogo', texto: site.tema === 'servicios' ? 'Ver servicios' : 'Ver catálogo' }
+  ? { href: '#catalogo', texto: h.botonPrincipal ?? (site.tema === 'servicios' ? 'Ver servicios' : 'Ver catálogo') }
   : activos.includes('Galeria')
-    ? { href: '#galeria', texto: 'Ver trabajos' }
+    ? { href: '#galeria', texto: h.botonPrincipal ?? 'Ver trabajos' }
     : undefined;
-const esfera = site.hero.efecto === 'esfera';
-// "Todo limpio, *sin vueltas.*": las partes impares (entre asteriscos) se resaltan.
-const titulo = site.hero.titulo.split('*');
-// El isotipo se usa como molde (máscara) para grabarlo en la esfera.
-const isotipo = esfera && site.marca.isotipo
-  ? await getImage({ src: foto(site.marca.isotipo.foto), width: 480, format: 'png' })
-  : undefined;
+const emblema = h.efecto === 'emblema' && h.foto;
+// Con esquema claro, la portada del emblema invierte los colores (fondo oscuro).
+const invertida = emblema && site.marca.esquema === 'claro';
+// "Tu trabajo merece *buenos insumos.*": las partes impares (entre asteriscos) se resaltan.
+const titulo = h.titulo.split('*');
 ---
 
-<section class:list={['hero', { 'hero--oscuro': esfera }]}>
+<section class:list={['hero', { 'hero--emblema': emblema, 'hero--oscuro': invertida }]} data-hero>
+  {emblema && <div class="hero__ambiente" aria-hidden="true"></div>}
   <div class="contenedor hero__grilla">
     <div class="hero__texto">
-      {site.hero.promo && <p class="hero__promo">{site.hero.promo}</p>}
+      {h.promo && <p class="hero__promo">{h.promo}</p>}
       <h1>{titulo.map((t, i) => (i % 2 ? <span class="hero__resalte">{t}</span> : t))}</h1>
-      <p class="hero__bajada">{site.hero.bajada}</p>
+      <p class="hero__bajada">{h.bajada}</p>
       <div class="hero__acciones">
         {principal && <a class="boton" href={principal.href}>{principal.texto}</a>}
         <a class="boton boton--secundario" href={linkWhatsApp(site.contacto.whatsapp)} target="_blank" rel="noopener">
-          Escribir por WhatsApp
+          {h.botonWhatsApp ?? 'Escribir por WhatsApp'}
         </a>
       </div>
+      {h.apoyo && <p class="hero__apoyo">{h.apoyo}</p>}
     </div>
-    {esfera ? (
-      <div class="hero__escena" aria-hidden="true" data-esfera>
-        <div class="esfera"></div>
-        {isotipo && (
-          <div class="esfera__marca">
-            <div class="esfera__grabado" style={`--isotipo: url(${isotipo.src})`}></div>
+    {emblema ? (
+      <div class="hero__escena" data-escena>
+        <div class="hero__flotar">
+          <div class="hero__inclinar" data-inclinar>
+            <Image
+              class="hero__emblema"
+              src={foto(h.foto!)}
+              alt={h.alt ?? ''}
+              widths={[220, 440, 660, 920]}
+              sizes="(min-width: 960px) 460px, 220px"
+              loading="eager"
+              fetchpriority="high"
+            />
           </div>
-        )}
-        <div class="esfera__sombra"></div>
+        </div>
+        <div class="hero__sombra" aria-hidden="true"></div>
       </div>
-    ) : site.hero.foto && (
+    ) : h.foto && (
       <Image
         class="hero__foto"
-        src={foto(site.hero.foto)}
-        alt={site.hero.alt ?? ''}
+        src={foto(h.foto)}
+        alt={h.alt ?? ''}
         widths={[480, 800, 1100]}
         sizes="(min-width: 960px) 540px, 100vw"
         loading="eager"
@@ -57,7 +65,7 @@ const isotipo = esfera && site.marca.isotipo
 </section>
 
 <style>
-  .hero { padding-block: var(--s6) var(--s7); }
+  .hero { position: relative; padding-block: var(--s6) var(--s7); }
   .hero__promo {
     display: inline-block; margin-bottom: var(--s4); padding: var(--s1) var(--s3);
     border: 1px solid currentColor; border-radius: 999px;
@@ -71,89 +79,97 @@ const isotipo = esfera && site.marca.isotipo
     letter-spacing: -0.02em;
     line-height: 0.98;
   }
+  .hero__resalte { color: var(--brand); }
   .hero__bajada { margin-top: var(--s4); font-size: var(--t-m); color: var(--muted); max-width: 44ch; }
   .hero__acciones { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s5); }
+  .hero__apoyo { margin-top: var(--s4); font-size: var(--t-s); color: var(--muted); }
   .hero__foto {
     width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
     border-radius: calc(var(--radius-card) * 2);
   }
 
-  /* Portada oscura con esfera cromada (hero.efecto = "esfera"). */
-  .hero--oscuro {
-    background: var(--ink); color: var(--surface);
-    padding-block: var(--s7) var(--s8); overflow: hidden;
+  /* Portada con emblema (hero.efecto = "emblema"). */
+  .hero--emblema { overflow: hidden; isolation: isolate; padding-block: var(--s6) var(--s7); }
+  @media (min-width: 960px) { .hero--emblema { padding-block: var(--s8); } }
+  .hero--emblema h1 { font-size: clamp(40px, 6.2vw, 84px); font-weight: 750; letter-spacing: -0.03em; line-height: 1; }
+  .hero--emblema .hero__promo {
+    border-color: var(--line); color: var(--muted);
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
   }
-  .hero--oscuro .hero__bajada { color: color-mix(in srgb, var(--surface) 78%, var(--ink)); }
-  .hero--oscuro h1 { font-size: clamp(48px, 12vw, 112px); letter-spacing: -0.035em; }
-  .hero__resalte { color: var(--brand); }
+  .hero--emblema .hero__bajada { max-width: 46ch; }
+  /* En celular el texto y el botón van primero; el emblema queda chico debajo. */
+  .hero__escena { position: relative; justify-self: center; width: clamp(180px, 52vw, 220px); }
+  @media (min-width: 960px) { .hero__escena { width: min(100%, 460px); } }
+  .hero__inclinar { transition: transform 0.35s ease-out; will-change: transform; }
+  .hero__emblema { width: 100%; height: auto; }
+  .hero__sombra {
+    position: absolute; left: 18%; right: 18%; bottom: -8%; height: 10%; border-radius: 50%; z-index: -1;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--brand) 30%, transparent), transparent);
+    filter: blur(8px);
+  }
+  /* Luces de ambiente: dos manchas muy suaves (marca y acento) detrás del emblema. */
+  .hero__ambiente { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .hero__ambiente::before, .hero__ambiente::after {
+    content: ''; position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; opacity: 0.16;
+  }
+  .hero__ambiente::before { right: -18vmax; top: -22vmax; background: radial-gradient(closest-side, var(--brand), transparent); }
+  .hero__ambiente::after { right: 6vmax; bottom: -34vmax; background: radial-gradient(closest-side, var(--accent), transparent); opacity: 0.1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__flotar { animation: flotar 7s ease-in-out infinite; }
+    .hero__ambiente::before { animation: luz 18s ease-in-out infinite alternate; }
+    .hero__ambiente::after { animation: luz 22s ease-in-out infinite alternate-reverse; }
+    @keyframes flotar { 50% { translate: 0 -10px; } }
+    @keyframes luz { to { translate: -6vmax 4vmax; } }
+    /* Fuera de vista las animaciones se pausan. */
+    .hero[data-fuera] .hero__flotar, .hero[data-fuera] .hero__ambiente::before, .hero[data-fuera] .hero__ambiente::after {
+      animation-play-state: paused;
+    }
+  }
+
+  /* Esquema oscuro: el resaltado del título es cromado (plata con brillo). */
+  :global([data-esquema='oscuro']) .hero__resalte {
+    background: linear-gradient(100deg, var(--cromo-claro) 0%, var(--cromo-medio) 42%, var(--cromo-claro) 68%, var(--cromo-medio) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Esquema claro con emblema: portada invertida sobre ink. */
+  .hero--oscuro { background: var(--ink); color: var(--surface); }
+  .hero--oscuro .hero__bajada, .hero--oscuro .hero__apoyo, .hero--oscuro .hero__promo { color: color-mix(in srgb, var(--surface) 78%, var(--ink)); }
   .hero--oscuro .hero__resalte { color: var(--accent); }
   .hero--oscuro .boton { background: var(--surface); border-color: var(--surface); color: var(--ink); }
   .hero--oscuro .boton:hover { background: var(--cromo-claro); border-color: var(--cromo-claro); }
   .hero--oscuro .boton--secundario { background: transparent; color: var(--surface); }
   .hero--oscuro .boton--secundario:hover { background: color-mix(in srgb, var(--surface) 12%, transparent); color: var(--surface); }
   .hero--oscuro :focus-visible { outline-color: var(--surface); }
-
-  .hero__escena {
-    position: relative; justify-self: center; width: min(62vw, 460px); aspect-ratio: 1;
-    --mx: 0; --my: 0;
-  }
-  .esfera {
-    position: absolute; inset: 0; border-radius: 50%; overflow: hidden; isolation: isolate;
-    transform: translate(calc(var(--mx) * 10px), calc(var(--my) * 10px));
-    transition: transform 0.3s ease-out;
-  }
-  /* Reflejos del cromo: un degradé circular desenfocado que gira. */
-  .esfera::before {
-    content: ''; position: absolute; inset: -20%;
-    background: conic-gradient(
-      var(--cromo-claro), var(--cromo-medio), var(--cromo-oscuro), var(--cromo-claro),
-      var(--cromo-medio), var(--cromo-oscuro), var(--cromo-claro), var(--cromo-medio), var(--cromo-claro));
-    filter: blur(18px);
-  }
-  /* Brillo y sombra fijos: dan el volumen de la esfera. */
-  .esfera::after {
-    content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background:
-      radial-gradient(circle at calc(32% + var(--mx) * 8%) calc(27% + var(--my) * 8%), var(--cromo-claro) 0 4%, transparent 15%),
-      radial-gradient(circle at 50% 50%, transparent 55%, color-mix(in srgb, var(--cromo-oscuro) 70%, transparent) 100%);
-    box-shadow:
-      inset -40px -52px 90px color-mix(in srgb, var(--cromo-oscuro) 80%, transparent),
-      inset 22px 22px 60px color-mix(in srgb, var(--cromo-claro) 30%, transparent);
-  }
-  /* Isotipo grabado: el logo recorta un cromo invertido (oscuro arriba, claro abajo). */
-  .esfera__marca {
-    position: absolute; inset: 30%;
-    transform: translate(calc(var(--mx) * 18px), calc(var(--my) * 18px));
-    transition: transform 0.3s ease-out;
-    filter:
-      drop-shadow(0 -2px 1px color-mix(in srgb, var(--cromo-oscuro) 55%, transparent))
-      drop-shadow(0 3px 2px color-mix(in srgb, var(--cromo-claro) 70%, transparent));
-  }
-  .esfera__grabado {
-    width: 100%; height: 100%;
-    background: linear-gradient(170deg, var(--cromo-oscuro), var(--cromo-medio) 55%, var(--cromo-claro));
-    mask: var(--isotipo) center / contain no-repeat;
-  }
-  .esfera__sombra {
-    position: absolute; left: 15%; right: 15%; bottom: -10%; height: 12%; border-radius: 50%;
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--cromo-medio) 45%, transparent), transparent);
-    filter: blur(6px);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .esfera::before { animation: girar 16s linear infinite; }
-    .hero__escena { animation: flotar 6s ease-in-out infinite; }
-    @keyframes girar { to { rotate: 360deg; } }
-    @keyframes flotar { 50% { translate: 0 -14px; } }
-  }
 </style>
 
 <script>
-  // La luz de la esfera sigue al mouse. Sin efecto si el usuario pidió menos movimiento.
-  const escena = document.querySelector<HTMLElement>('[data-esfera]');
-  if (escena && matchMedia('(prefers-reduced-motion: no-preference) and (pointer: fine)').matches) {
-    addEventListener('pointermove', (e) => {
-      escena.style.setProperty('--mx', String((e.clientX / innerWidth - 0.5) * 2));
-      escena.style.setProperty('--my', String((e.clientY / innerHeight - 0.5) * 2));
-    }, { passive: true });
+  // El emblema se inclina un poco hacia el mouse (máximo 5°) mientras el puntero está en la portada.
+  // Solo con mouse y sin pedido de menos movimiento. Fuera de vista, las animaciones se pausan.
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const escena = hero?.querySelector<HTMLElement>('[data-escena]');
+  const inclinar = hero?.querySelector<HTMLElement>('[data-inclinar]');
+  if (hero && escena && inclinar) {
+    new IntersectionObserver(([e]) => hero.toggleAttribute('data-fuera', !e.isIntersecting)).observe(hero);
+    const puedeInclinar = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    let x = 0;
+    let y = 0;
+    let pendiente = false;
+    const aplicar = () => {
+      pendiente = false;
+      inclinar.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg) scale(1.025)`;
+    };
+    hero.addEventListener('pointermove', (e) => {
+      if (!puedeInclinar.matches) return;
+      const caja = escena.getBoundingClientRect();
+      const limitar = (n: number) => Math.max(-1, Math.min(1, n));
+      x = limitar((e.clientX - (caja.left + caja.width / 2)) / (caja.width / 2));
+      y = limitar((e.clientY - (caja.top + caja.height / 2)) / (caja.height / 2));
+      if (!pendiente) {
+        pendiente = true;
+        requestAnimationFrame(aplicar);
+      }
+    });
+    hero.addEventListener('pointerleave', () => (inclinar.style.transform = ''));
   }
 </script>

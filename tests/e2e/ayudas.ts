@@ -28,6 +28,8 @@ export async function linkAbierto(page: Page) {
 }
 
 export async function sinErroresDeAccesibilidad(page: Page) {
+  // Sin animaciones: axe mide el contraste de cada texto en su estado final, no a mitad de una aparición.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   const graves = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(graves.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`)).toEqual([]);
