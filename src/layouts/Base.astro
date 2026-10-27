@@ -73,6 +73,23 @@ const jsonLd = {
   <body>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
     <slot />
+    <script>
+      // Hace aparecer los .revelar al entrar en pantalla, una sola vez (ver motor.css).
+      if (matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+        const observador = new IntersectionObserver(
+          (entradas) => {
+            for (const e of entradas) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('revelado');
+              observador.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -6% 0px' },
+        );
+        document.querySelectorAll('.revelar').forEach((el) => observador.observe(el));
+        document.documentElement.classList.add('js-revelar');
+      }
+    </script>
   </body>
 </html>
 

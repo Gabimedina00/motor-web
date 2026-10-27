@@ -8,14 +8,16 @@ const conCarrito = bloquesDe(site).includes('Carrito');
 const conTurno = bloquesDe(site).includes('Turno');
 const $ = (n: number) => formatoPrecio(n, site.moneda, site.idioma);
 const grupos = (productos?.categorias ?? [])
-  .map((c) => {
-    const items = productos!.productos.filter((p) => p.categoria === c.id);
-    return { ...c, items, doble: items.some((p) => p.paraQuien?.length) };
-  })
+  .map((c) => ({ ...c, items: productos!.productos.filter((p) => p.categoria === c.id) }))
   .filter((c) => c.items.length);
+// Tamaño con el que se dibuja la foto, para que el navegador baje la versión justa.
+const SIZES = {
+  normal: '(min-width: 1200px) 360px, (min-width: 960px) 30vw, (min-width: 600px) 46vw, 104px',
+  ancha: '(min-width: 1200px) 560px, (min-width: 600px) 48vw, 104px',
+};
 ---
 
-<section id="catalogo" class="seccion catalogo" aria-labelledby="catalogo-titulo">
+<section id="catalogo" class="seccion catalogo" aria-labelledby="catalogo-titulo" data-moneda={site.moneda} data-idioma={site.idioma}>
   <div class="contenedor">
     <h2 id="catalogo-titulo" class="solo-lectores">{site.tema === 'servicios' ? 'Servicios' : 'Catálogo'}</h2>
     {productos?.aviso && <p class="catalogo__aviso">{productos.aviso}</p>}
@@ -24,74 +26,77 @@ const grupos = (productos?.categorias ?? [])
         <h2 id={`tit-${g.id}`} class="seccion__titulo catalogo__titulo revelar">
           <span class="catalogo__num" aria-hidden="true">{String(n + 1).padStart(2, '0')}</span>{g.nombre}
         </h2>
-        <ul class:list={['catalogo__grilla', { 'catalogo__grilla--doble': g.doble }]}>
-          {g.items.map((p) => (
-            <li class:list={['card', 'revelar', { 'card--sin-foto': !p.foto, 'card--doble': p.paraQuien?.length }]} data-producto={p.id}>
-              {p.foto && (
-                <div class:list={['card__marco', { 'card__marco--tinte': p.fondo }]} style={p.fondo ? `--fondo: ${p.fondo}` : undefined}>
-                  <Image class="card__foto" src={foto(p.foto)} alt={p.alt!} widths={[160, 320, 480, 720]} sizes="(min-width: 600px) 360px, 104px" />
+        <ul class="catalogo__grilla">
+          {g.items.map((p) => {
+            const v = p.variantes[0];
+            const sola = g.items.length === 1;
+            return (
+              <li class:list={['card', 'revelar', { 'card--sin-foto': !p.foto, 'card--ancha': sola }]} data-producto={p.id}>
+                {p.foto && (
+                  <div class="card__marco" style={p.fondo ? `--fondo: ${p.fondo}` : undefined}>
+                    <Image
+                      class="card__foto"
+                      src={foto(p.foto)}
+                      alt={p.alt!}
+                      widths={[160, 320, 480, 720, 1100]}
+                      sizes={sola ? SIZES.ancha : SIZES.normal}
+                    />
+                  </div>
+                )}
+                <div class="card__cuerpo">
+                  <div class="card__cabeza">
+                    <h3>{p.nombre}</h3>
+                    {p.etiqueta && <span class="badge">{p.etiqueta}</span>}
+                  </div>
+                  {p.descripcion && <p class="card__desc">{p.descripcion}</p>}
+                  {p.idealPara?.length && (
+                    <p class="card__ideal"><span>Ideal para:</span> {p.idealPara.join(' · ')}</p>
+                  )}
                 </div>
-              )}
-              <div class="card__cuerpo">
-                <div class="card__cabeza">
-                  <h3>{p.nombre}</h3>
-                  {p.etiqueta && <span class="badge">{p.etiqueta}</span>}
-                </div>
-                {p.descripcion && <p class="card__desc">{p.descripcion}</p>}
-                <div class="card__pie">
-                  {p.variantes.length === 1 ? (
-                    <p class="card__precio">
-                      {p.variantes[0].nombre !== 'Unidad' && <span class="card__variante">{p.variantes[0].nombre} </span>}
-                      {$(p.variantes[0].precio)}
-                      {p.variantes[0].precioAntes && (
-                        <span class="card__ahorro">
-                          <s><span class="solo-lectores">Antes </span>{$(p.variantes[0].precioAntes)}</s>
-                          <span class="badge">Ahorrás {$(p.variantes[0].precioAntes - p.variantes[0].precio)}</span>
-                        </span>
-                      )}
-                    </p>
-                  ) : (
-                    <label class="card__selector">
-                      <span class="solo-lectores">Presentación de {p.nombre}</span>
-                      <select data-variante>
-                        {p.variantes.map((v, i) => (
-                          <option value={i}>{v.nombre}: {$(v.precio)}{v.precioAntes ? ` (ahorrás ${$(v.precioAntes - v.precio)})` : ''}</option>
+                <div class="card__compra">
+                  {p.variantes.length > 1 && (
+                    <div class="campo card__selector">
+                      <label for={`presentacion-${p.id}`}>Presentación</label>
+                      <select id={`presentacion-${p.id}`} data-variante>
+                        {p.variantes.map((x, i) => (
+                          <option value={i}>{x.nombre}: {$(x.precio)}{x.precioAntes ? ` (ahorrás ${$(x.precioAntes - x.precio)})` : ''}</option>
                         ))}
                       </select>
-                    </label>
+                    </div>
                   )}
+                  <div class="card__precios">
+                    <p class="card__precio">
+                      {p.variantes.length === 1 && v.nombre !== 'Unidad' && <span class="card__variante">{v.nombre}</span>}
+                      <span data-precio>{$(v.precio)}</span>
+                    </p>
+                    <p class="card__ahorro" data-ahorro hidden={!v.precioAntes}>
+                      <s><span class="solo-lectores">Antes </span><span data-antes>{v.precioAntes && $(v.precioAntes)}</span></s>
+                      <span class="badge badge--promo">Ahorrás <span data-ahorras>{v.precioAntes && $(v.precioAntes - v.precio)}</span></span>
+                    </p>
+                  </div>
                   {!p.disponible ? (
                     <span class="badge badge--cerrado">Sin stock</span>
                   ) : conCarrito ? (
                     <button
-                      class="boton boton--chico"
+                      class="boton card__agregar"
                       type="button"
                       data-agregar
+                      data-id={p.id}
                       data-nombre={p.nombre}
                       data-variantes={JSON.stringify(p.variantes)}
                     >
-                      Agregar<span class="solo-lectores"> {p.nombre}</span>
+                      <span class="card__agregar-texto">Agregar al pedido<span class="solo-lectores"> {p.nombre}</span></span>
+                      <span class="card__agregar-listo" aria-hidden="true">✓ Agregado al pedido</span>
                     </button>
                   ) : conTurno ? (
-                    <a class="boton boton--chico boton--secundario" href="#turno" data-elegir-servicio={p.nombre}>
+                    <a class="boton boton--secundario card__agregar" href="#turno" data-elegir-servicio={p.nombre}>
                       Pedir turno<span class="solo-lectores"> para {p.nombre}</span>
                     </a>
                   ) : null}
                 </div>
-              </div>
-              {p.paraQuien?.length && (
-                <aside class="card__quien" aria-labelledby={`quien-${p.id}`}>
-                  <h4 id={`quien-${p.id}`} class="card__quien-titulo">A quién le sirve</h4>
-                  {/* En celular la lista se desliza de costado: tabindex permite recorrerla con el teclado. */}
-                  <ul tabindex="0" aria-labelledby={`quien-${p.id}`}>
-                    {p.paraQuien.map((q) => (
-                      <li><strong>{q.oficio}</strong> <span>{q.para}</span></li>
-                    ))}
-                  </ul>
-                </aside>
-              )}
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </section>
     ))}
@@ -103,95 +108,97 @@ const grupos = (productos?.categorias ?? [])
   .catalogo__grupo + .catalogo__grupo { margin-top: var(--s7); }
   .catalogo__titulo {
     display: flex; align-items: baseline; gap: var(--s3);
-    font-size: clamp(36px, 7vw, 72px); letter-spacing: -0.03em; line-height: 1;
+    font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.02em; line-height: 1.1;
   }
-  .catalogo__num { font: 600 var(--t-s) / 1 var(--font-text); letter-spacing: 0.08em; color: var(--muted); translate: 0 -1.6em; }
-  .catalogo__grilla { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
-  @media (min-width: 600px) { .catalogo__grilla { grid-template-columns: repeat(2, 1fr); gap: var(--s5); } }
-  @media (min-width: 960px) { .catalogo__grilla { grid-template-columns: repeat(3, 1fr); } }
-
-  .card {
-    display: grid; grid-template-columns: 104px 1fr; gap: var(--s3);
-    padding: var(--s3); border: 1px solid var(--line); border-radius: var(--radius-card);
-    background: var(--surface);
-  }
-  @media (min-width: 600px) { .card { grid-template-columns: 1fr; padding: 0; overflow: hidden; } }
-  .card__marco {
-    width: 104px; height: 104px; overflow: hidden; border-radius: calc(var(--radius-card) - 4px);
-    background: var(--fondo, var(--surface-alt));
-  }
-  @media (min-width: 600px) { .card__marco { width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 0; } }
-  .card__foto { width: 100%; height: 100%; object-fit: cover; }
-  /* Con color de fondo, la foto se funde con él (el blanco de la foto toma el color). */
-  .card__marco--tinte .card__foto { object-fit: contain; mix-blend-mode: multiply; }
-  .card__ahorro { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-top: var(--s1); font-size: var(--t-s); font-weight: 500; }
-  .card__ahorro s { color: var(--muted); }
-  .card--sin-foto { grid-template-columns: 1fr; }
-  @media (min-width: 600px) { .card--sin-foto { padding-top: var(--s2); } }
-  .card__cuerpo { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
-  @media (min-width: 600px) { .card__cuerpo { padding: var(--s4); flex: 1; } }
-  .card__cabeza { display: flex; align-items: start; justify-content: space-between; gap: var(--s2); }
-  .card h3 { font-size: var(--t-m); }
-  .card__desc {
-    color: var(--muted); font-size: var(--t-s);
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .card__pie { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; margin-top: auto; }
-  .card__precio { font-weight: 700; font-size: var(--t-m); color: var(--ink); }
-  .card__variante { font-weight: 500; font-size: var(--t-s); color: var(--muted); }
+  .catalogo__num { font: 600 13px / 1 var(--font-text); letter-spacing: 0.08em; color: var(--muted); }
   .catalogo__aviso {
     display: inline-block; margin-bottom: var(--s5); padding: var(--s2) var(--s4);
     border-radius: 999px; background: var(--surface-alt); color: var(--ink);
     font-size: var(--t-s); font-weight: 600;
   }
-  @media (prefers-reduced-motion: no-preference) {
-    .card__foto { transition: scale 0.5s ease; }
-    .card:hover .card__foto { scale: 1.04; }
+  .catalogo__grilla { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); }
+  @media (min-width: 600px) { .catalogo__grilla { grid-template-columns: repeat(2, 1fr); gap: var(--s5); } }
+  @media (min-width: 960px) { .catalogo__grilla { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Celular: foto chica al costado del nombre, y la compra a todo el ancho debajo. */
+  .card {
+    display: grid; grid-template-columns: 104px 1fr; gap: var(--s3);
+    padding: var(--s3); border: 1px solid var(--line); border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  :global([data-esquema='oscuro']) .card { background: var(--surface-alt); }
+  .card--sin-foto { grid-template-columns: 1fr; }
+  .card__marco {
+    width: 104px; height: 104px; overflow: hidden; border-radius: calc(var(--radius-card) - 6px);
+    background: var(--fondo, var(--surface-raised));
+  }
+  .card__foto { width: 100%; height: 100%; object-fit: contain; }
+  .card__cuerpo { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+  /* Si el nombre no entra junto a la etiqueta, la etiqueta baja: el nombre nunca queda en una columna finita. */
+  .card__cabeza { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--s1) var(--s2); }
+  .card h3 { flex: 1 1 9em; font-size: var(--t-m); }
+  .card__desc { color: var(--muted); font-size: var(--t-s); }
+  .card__ideal { font-size: 13px; color: var(--muted); }
+  .card__ideal span { font-weight: 600; color: var(--ink); }
+  .card__compra { grid-column: 1 / -1; display: grid; gap: var(--s3); align-content: end; }
+  .card__selector select { width: 100%; }
+  .card__precios { display: grid; gap: var(--s1); }
+  .card__precio { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--s2); font-weight: 750; font-size: clamp(24px, 2.2vw, 28px); line-height: 1.1; color: var(--ink); }
+  .card__variante { font-weight: 500; font-size: var(--t-s); color: var(--muted); }
+  .card__ahorro { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--t-s); }
+  .card__ahorro[hidden] { display: none; }
+  .card__ahorro s { color: var(--muted); }
+  /* El botón reserva el ancho de las dos leyendas: al pasar a "Agregado" no se mueve nada. */
+  .card__agregar { display: inline-grid; width: 100%; }
+  .card__agregar > span { grid-area: 1 / 1; }
+  .card__agregar-listo, .card__agregar[data-listo] .card__agregar-texto { visibility: hidden; }
+  .card__agregar[data-listo] .card__agregar-listo { visibility: visible; }
+
+  @media (min-width: 600px) {
+    .card { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; padding: 0; overflow: hidden; }
+    .card__marco { width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 0; }
+    .card__cuerpo { padding: var(--s4) var(--s4) 0; }
+    .card__compra { padding: 0 var(--s4) var(--s4); }
+    /* Un solo producto en la categoría: ficha ancha, foto a un lado y compra al otro. */
+    .catalogo__grilla > .card--ancha { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; }
+    .card--ancha .card__marco { grid-row: 1 / -1; height: 100%; }
+    .card--ancha .card__cuerpo { padding-top: var(--s5); }
+    .card--ancha .card__compra { grid-column: 2; align-content: start; padding-top: var(--s4); padding-bottom: var(--s5); }
+  }
+  @media (min-width: 960px) {
+    .card--ancha .card__cuerpo, .card--ancha .card__compra { padding-inline: var(--s6); }
   }
 
-  /* Ficha en dos lados: el producto y "a quién le sirve". */
-  @media (min-width: 600px) { .catalogo__grilla--doble { grid-template-columns: 1fr; } }
-  @media (min-width: 960px) { .catalogo__grilla--doble { grid-template-columns: repeat(2, 1fr); } }
-  .card__quien { grid-column: 1 / -1; min-width: 0; }
-  .card__quien-titulo { font-family: var(--font-text); font-size: var(--t-s); font-weight: 700; margin: 0 0 var(--s2); }
-  .card__quien ul {
-    list-style: none; margin: 0; padding: 0 0 var(--s1);
-    display: flex; gap: var(--s2); overflow-x: auto; scroll-snap-type: x mandatory;
+  /* Con mouse: la tarjeta sube un poco y el borde se ilumina; la foto se acerca apenas. */
+  @media (hover: hover) and (pointer: fine) {
+    .card { transition: border-color 0.2s, translate 0.2s, box-shadow 0.2s; }
+    .card:hover { border-color: var(--control-border); box-shadow: var(--shadow); }
   }
-  .card__quien li {
-    flex: 0 0 auto; max-width: 200px; scroll-snap-align: start;
-    padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--radius-card);
-    background: var(--surface-alt);
-  }
-  .card__quien ul:focus-visible { outline-offset: 4px; border-radius: 8px; }
-  .card__quien strong { display: block; font-size: var(--t-s); }
-  .card__quien span { display: block; font-size: var(--t-s); color: var(--muted); line-height: 1.35; }
-  @media (min-width: 600px) {
-    .card--doble {
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas: 'foto quien' 'cuerpo quien';
-    }
-    .card--doble .card__marco { grid-area: foto; }
-    .card--doble .card__cuerpo { grid-area: cuerpo; }
-    .card--doble .card__quien {
-      grid-area: quien; grid-column: auto;
-      padding: var(--s5) var(--s4); background: var(--surface-alt); border-left: 1px solid var(--line);
-    }
-    .card--doble .card__quien ul { flex-direction: column; overflow: visible; gap: 0; }
-    .card--doble .card__quien li {
-      max-width: none; padding: var(--s3) 0; border: 0; border-radius: 0; background: none;
-      border-bottom: 1px solid var(--line);
-    }
-    .card--doble .card__quien li:last-child { border-bottom: 0; }
-  }
-  /* La ficha doble ya es alta (la marca la columna de oficios): la descripción se muestra completa. */
-  .card--doble .card__desc { display: block; }
-  /* Si una categoría tiene un solo producto, la ficha ocupa todo el ancho y queda destacada. */
-  @media (min-width: 960px) { .catalogo__grilla--doble > .card--doble:only-child { grid-column: 1 / -1; } }
-  .card__selector { min-width: 0; max-width: 100%; }
-  .card__selector select {
-    width: 100%; min-height: 40px; padding: 0 var(--s2);
-    border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 8px;
-    background: var(--surface); color: var(--ink); font: 600 var(--t-s) var(--font-text);
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .card:hover { translate: 0 -3px; }
+    .card__foto { transition: scale 0.4s ease; }
+    .card:hover .card__foto { scale: 1.03; }
   }
 </style>
+
+<script>
+  import { formatoPrecio } from '../lib/precio';
+  // Al cambiar la presentación, el precio grande (y el ahorro) muestran la elegida.
+  const catalogo = document.querySelector<HTMLElement>('#catalogo');
+  if (catalogo) {
+    const $ = (n: number) => formatoPrecio(n, catalogo.dataset.moneda, catalogo.dataset.idioma);
+    catalogo.addEventListener('change', (e) => {
+      const select = (e.target as HTMLElement).closest<HTMLSelectElement>('[data-variante]');
+      const card = select?.closest<HTMLElement>('[data-producto]');
+      const boton = card?.querySelector<HTMLElement>('[data-agregar]');
+      if (!select || !card || !boton) return;
+      const v: { precio: number; precioAntes?: number } = JSON.parse(boton.dataset.variantes!)[Number(select.value)];
+      card.querySelector('[data-precio]')!.textContent = $(v.precio);
+      card.querySelector('[data-ahorro]')!.toggleAttribute('hidden', !v.precioAntes);
+      if (v.precioAntes) {
+        card.querySelector('[data-antes]')!.textContent = $(v.precioAntes);
+        card.querySelector('[data-ahorras]')!.textContent = $(v.precioAntes - v.precio);
+      }
+    });
+  }
+</script>

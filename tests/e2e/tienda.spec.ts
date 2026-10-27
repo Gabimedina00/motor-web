@@ -64,15 +64,19 @@ test('muestra si el local está abierto o cerrado', async ({ page }) => {
   await expect(page.locator('#ubicaciones [data-estado]')).toHaveText(/^(Abierto|Cerrado)/);
 });
 
-test('la ficha en dos lados muestra a quién le sirve el producto', async ({ page }) => {
+test('la ficha muestra para quién es el producto', async ({ page }) => {
   await abrir(page, SITIOS.tienda);
   await expect(page.getByText('Precios actualizados al 1 de octubre')).toBeVisible();
-  const ficha = page.locator('[data-producto="sansevieria"]');
-  const quien = ficha.getByRole('complementary', { name: 'A quién le sirve' });
-  await expect(quien.getByRole('listitem')).toHaveCount(3);
-  await expect(quien).toContainText('Departamentos');
-  // Un producto sin "paraQuien" queda como siempre.
-  await expect(page.locator('[data-producto="potus"]').getByRole('complementary')).toHaveCount(0);
+  await expect(page.locator('[data-producto="sansevieria"] .card__ideal')).toHaveText('Ideal para: departamentos · oficinas · principiantes');
+  // Un producto sin "idealPara" no muestra la línea.
+  await expect(page.locator('[data-producto="potus"] .card__ideal')).toHaveCount(0);
+});
+
+test('al cambiar la presentación cambia el precio grande', async ({ page }) => {
+  await abrir(page, SITIOS.tienda);
+  const ficha = page.locator('[data-producto="suculentas-surtidas"]');
+  await ficha.getByLabel('Presentación').selectOption({ label: 'Bandeja x 6: $ 9.500' });
+  await expect(ficha.locator('[data-precio]')).toHaveText('$ 9.500');
 });
 
 test('la cinta y los precios de promo se leen bien', async ({ page }) => {

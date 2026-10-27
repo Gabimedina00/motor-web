@@ -19,12 +19,12 @@ export const productoSchema = z
     foto: z.string().optional(),
     alt: z.string().optional(),
     etiqueta: z.string().optional(),
-    // Color de fondo detrás de la foto (las fotos con fondo blanco se funden con él).
+    // Color de fondo del recuadro de la foto (se ve si la foto no llena el recuadro).
     fondo: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Usá un color hex de 6 dígitos').optional(),
-    // "A quién le sirve": texto de venta que se muestra al lado del producto. No es un filtro.
-    paraQuien: z
-      .array(z.object({ oficio: z.string().min(1), para: z.string().min(1) }))
-      .max(6, 'Máximo 6 oficios por producto para que la ficha se lea de un vistazo')
+    // "Ideal para: manicura · pestañas · estética". Texto de venta, no es un filtro.
+    idealPara: z
+      .array(z.string().min(1))
+      .max(4, 'Máximo 4 rubros por producto para que la ficha se lea de un vistazo')
       .optional(),
     disponible: z.boolean().default(true),
     variantes: z.array(varianteSchema).min(1, 'Cada producto necesita al menos un precio'),

@@ -35,6 +35,14 @@ export function iniciarCarrito() {
     }
   };
 
+  // Avisa a los lectores de pantalla lo que pasó (región aria-live fuera del diálogo).
+  const anunciar = (texto: string) => {
+    const region = document.querySelector('[data-anuncio]');
+    if (!region) return;
+    region.textContent = '';
+    requestAnimationFrame(() => (region.textContent = texto));
+  };
+
   function agregar(item: Omit<ItemPedido, 'cantidad'>) {
     const existente = items.find((i) => i.nombre === item.nombre && i.variante === item.variante);
     if (existente) existente.cantidad++;
@@ -108,8 +116,9 @@ export function iniciarCarrito() {
       const selector = boton.closest('[data-producto]')?.querySelector<HTMLSelectElement>('[data-variante]');
       const v = variantes[selector ? Number(selector.value) : 0];
       agregar({ nombre: boton.dataset.nombre!, variante: variantes.length > 1 || v.nombre !== 'Unidad' ? v.nombre : undefined, precio: v.precio });
-      boton.textContent = 'Agregado';
-      setTimeout(() => (boton.innerHTML = `Agregar<span class="solo-lectores"> ${boton.dataset.nombre}</span>`), 1200);
+      boton.setAttribute('data-listo', '');
+      setTimeout(() => boton.removeAttribute('data-listo'), 1400);
+      anunciar(`Agregaste ${boton.dataset.nombre} al pedido.`);
     }
     if (destino.closest('[data-abrir-carrito]')) {
       dialogo.showModal();

@@ -59,25 +59,12 @@
             "type": "string",
             "pattern": "^#[0-9a-fA-F]{6}$"
           },
-          "paraQuien": {
-            "maxItems": 6,
+          "idealPara": {
+            "maxItems": 4,
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "oficio": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "para": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "oficio",
-                "para"
-              ]
+              "type": "string",
+              "minLength": 1
             }
           },
           "disponible": {
