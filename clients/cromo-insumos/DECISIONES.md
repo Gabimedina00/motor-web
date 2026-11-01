@@ -34,3 +34,11 @@ Pendiente de confirmar con el comercio:
 Pendiente técnico:
 - Datos `Product`/`Offer` para buscadores: no se agregaron todavía.
 - Prueba en un celular real y medición de carga (Lighthouse) sobre la versión publicada.
+
+## 2026-11-01 · Dirección de la página
+
+- Se descartó el proyecto de Cloudflare Pages (`cromo-insumos.pages.dev`): nunca se creó.
+- Mientras tanto, canónico, og:url, JSON-LD y la imagen para compartir salen del Worker
+  que ya publica la página: https://motor-web.gabrielmed1n400.workers.dev
+- Próximo paso: Gabriel recupera el dominio .com que registró el desarrollador anterior.
+  Cuando esté conectado al Worker como dominio propio, se cambia `url` en `site.json`.
