@@ -1,35 +1,159 @@
 ---
-import { site } from '../lib/cliente';
+import { Image } from 'astro:assets';
+import { site, foto } from '../lib/cliente';
+import { bloquesDe } from '../themes';
 import { linkWhatsApp } from '../lib/whatsapp';
+
 const c = site.contacto;
+const bloques = bloquesDe(site);
+
+// Íconos dibujados a mano (trazo de 24 × 24), para no cargar una librería entera.
+const ICONOS = {
+  whatsapp:
+    '<path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 8.6c.2-.5.5-.6.8-.6h.5c.2 0 .4.1.5.4l.6 1.5c.1.2 0 .5-.1.6l-.5.6c-.1.1-.2.3 0 .5.5.9 1.3 1.7 2.2 2.2.2.1.4.1.5 0l.6-.6c.2-.2.4-.2.6-.1l1.5.7c.2.1.4.3.3.5 0 .6-.2 1.2-.7 1.5-.6.4-1.5.5-2.6.1a9 9 0 0 1-4.5-4.4c-.4-1-.3-2.1.3-2.9z"/>',
+  instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/>',
+  facebook: '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z"/>',
+  tiktok: '<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.2 4.3 5 4.5"/>',
+  mapa: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  telefono: '<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2"/>',
+  email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+};
+
+// "+54 9 362 476-9874" a partir de "5493624769874". Si no tiene esa forma, se muestra tal cual.
+const numero = c.whatsapp.match(/^54(9)(\d{3})(\d{3})(\d{4})$/);
+const whatsappVisible = numero ? `+54 ${numero[1]} ${numero[2]} ${numero[3]}-${numero[4]}` : `+${c.whatsapp}`;
+const usuario = (url?: string) => url && '@' + new URL(url).pathname.split('/').filter(Boolean).pop();
+
 const redes = [
-  { nombre: 'WhatsApp', url: linkWhatsApp(c.whatsapp) },
-  { nombre: 'Instagram', url: c.instagram },
-  { nombre: 'Facebook', url: c.facebook },
-  { nombre: 'TikTok', url: c.tiktok },
+  { nombre: 'WhatsApp', icono: ICONOS.whatsapp, url: linkWhatsApp(c.whatsapp) },
+  { nombre: 'Instagram', icono: ICONOS.instagram, url: c.instagram },
+  { nombre: 'Facebook', icono: ICONOS.facebook, url: c.facebook },
+  { nombre: 'TikTok', icono: ICONOS.tiktok, url: c.tiktok },
 ].filter((r) => r.url);
+
+const mapa = c.mapa ?? (c.direccion && `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.direccion)}`);
+const datos = [
+  { icono: ICONOS.whatsapp, texto: whatsappVisible, url: linkWhatsApp(c.whatsapp), externo: true },
+  c.instagram && { icono: ICONOS.instagram, texto: usuario(c.instagram), url: c.instagram, externo: true },
+  c.telefono && { icono: ICONOS.telefono, texto: c.telefono, url: `tel:${c.telefono.replace(/\s/g, '')}` },
+  c.email && { icono: ICONOS.email, texto: c.email, url: `mailto:${c.email}` },
+  c.direccion && { icono: ICONOS.mapa, texto: c.direccion, url: mapa, externo: true, extra: 'Ver en Google Maps' },
+].filter(Boolean) as { icono: string; texto: string; url: string; externo?: boolean; extra?: string }[];
+
+const enlaces = [
+  { bloque: 'Catalogo', href: '#catalogo', texto: site.tema === 'servicios' ? 'Servicios' : 'Catálogo' },
+  { bloque: 'Pasos', href: '#como-comprar', texto: 'Cómo comprar' },
+  { bloque: 'Galeria', href: '#galeria', texto: 'Trabajos' },
+  { bloque: 'Turno', href: '#turno', texto: 'Pedir turno' },
+  { bloque: 'Ubicaciones', href: '#ubicaciones', texto: 'Dónde estamos' },
+  { bloque: 'FAQ', href: '#preguntas', texto: 'Preguntas frecuentes' },
+  { bloque: 'Contacto', href: '#contacto', texto: 'Contacto' },
+].filter((e) => bloques.includes(e.bloque as never));
+
+const isotipo = site.marca.isotipo;
 const anio = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="contenedor footer__fila">
-    <p class="footer__marca">{site.nombre}{site.marca.lema && <span class="footer__lema">{site.marca.lema}</span>}</p>
-    {redes.length > 0 && (
-      <ul class="footer__redes" aria-label="WhatsApp y redes">
-        {redes.map((r) => <li><a href={r.url} target="_blank" rel="noopener">{r.nombre}</a></li>)}
+  <div class="contenedor footer__grilla">
+    <div class="footer__marca">
+      <p class="footer__nombre">
+        {isotipo && <Image src={foto(isotipo.foto)} alt="" width={40} height={40} class="footer__isotipo" />}
+        {site.nombre}
+      </p>
+      {site.marca.lema && <p class="footer__lema">{site.marca.lema}</p>}
+      {redes.length > 0 && (
+        <ul class="footer__redes" aria-label="Redes sociales">
+          {redes.map((r) => (
+            <li>
+              <a href={r.url} target="_blank" rel="noopener" aria-label={`${r.nombre} (se abre en otra pestaña)`}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" set:html={r.icono} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div class="footer__columna">
+      <h2 class="footer__titulo">Contacto</h2>
+      <ul class="footer__datos">
+        {datos.map((d) => (
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={d.icono} />
+            <a href={d.url} target={d.externo ? '_blank' : undefined} rel={d.externo ? 'noopener' : undefined}>
+              <span>{d.texto}</span>
+              {d.extra && <span class="footer__extra">{d.extra} ↗</span>}
+            </a>
+          </li>
+        ))}
       </ul>
+    </div>
+
+    {enlaces.length > 0 && (
+      <nav class="footer__columna" aria-label="Secciones">
+        <h2 class="footer__titulo">Secciones</h2>
+        <ul class="footer__enlaces">{enlaces.map((e) => <li><a href={e.href}>{e.texto}</a></li>)}</ul>
+      </nav>
     )}
-    <p class="footer__legal">© {anio} {site.nombre}</p>
+  </div>
+
+  <p class="footer__gigante" aria-hidden="true">{site.nombre}</p>
+
+  <div class="contenedor footer__base">
+    <p>© {anio} {site.nombre}. Todos los derechos reservados.</p>
+    <p>{site.rubro}</p>
   </div>
 </footer>
 
 <style>
-  .footer { padding-block: var(--s6) calc(var(--s8) + var(--s5)); border-top: 1px solid var(--line); margin-top: var(--s7); }
-  .footer__fila { display: grid; gap: var(--s3); }
-  @media (min-width: 760px) { .footer__fila { grid-template-columns: 1fr auto auto; align-items: center; gap: var(--s6); } }
-  .footer__marca { font: 700 var(--t-l) var(--font-display); }
-  .footer__lema { display: block; margin-top: var(--s1); font: 500 var(--t-s) var(--font-text); color: var(--muted); }
-  .footer__redes { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s4); }
-  .footer__redes a { color: var(--ink); }
-  .footer__legal { color: var(--muted); font-size: var(--t-s); }
+  .footer {
+    position: relative; overflow: hidden;
+    margin-top: var(--s7); padding-block: var(--s7) calc(var(--s8) + var(--s5));
+    border-top: 1px solid var(--line);
+    background: radial-gradient(80% 60% at 50% 100%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%), var(--surface);
+  }
+  .footer__grilla { display: grid; gap: var(--s6); }
+  @media (min-width: 760px) { .footer__grilla { grid-template-columns: 1.4fr 1fr auto; gap: var(--s7); } }
+
+  .footer__nombre { display: flex; align-items: center; gap: var(--s3); font: 800 var(--t-l) / 1.1 var(--font-display); letter-spacing: -0.01em; }
+  .footer__isotipo { width: 40px; height: 40px; object-fit: contain; }
+  .footer__lema { max-width: 42ch; margin-top: var(--s3); color: var(--muted); }
+
+  .footer__redes { list-style: none; margin: var(--s5) 0 0; padding: 0; display: flex; gap: var(--s3); }
+  .footer__redes a {
+    display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface-alt); color: var(--ink);
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, translate 0.2s;
+  }
+  .footer__redes a:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .footer__redes svg { width: 22px; height: 22px; }
+  @media (prefers-reduced-motion: no-preference) { .footer__redes a:hover { translate: 0 -3px; } }
+
+  .footer__titulo {
+    margin-bottom: var(--s4); color: var(--accent);
+    font: 700 var(--t-s) / 1 var(--font-text); letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer__datos, .footer__enlaces { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+  .footer__datos li { display: grid; grid-template-columns: 20px 1fr; gap: var(--s3); align-items: start; }
+  .footer__datos svg, .footer__redes svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .footer__datos svg { width: 20px; height: 20px; margin-top: 2px; color: var(--muted); }
+  .footer a { color: var(--ink); text-decoration: none; }
+  .footer__datos a, .footer__enlaces a { display: inline-grid; gap: 2px; min-height: 24px; }
+  .footer__datos a:hover span:first-child, .footer__enlaces a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+  .footer__extra { font-size: var(--t-s); color: var(--muted); }
+
+  /* El nombre gigante con brillo cromado, como cierre de la página. Es decorativo. */
+  .footer__gigante {
+    margin: var(--s7) 0 0; padding-inline: var(--gutter); text-align: center; white-space: nowrap;
+    font: 800 clamp(40px, 12vw, 190px) / 0.9 var(--font-display); letter-spacing: -0.04em;
+    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 25%, var(--surface)) 80%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    opacity: 0.35; user-select: none;
+  }
+  .footer__base {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s2) var(--s5);
+    margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line);
+    color: var(--muted); font-size: var(--t-s);
+  }
 </style>

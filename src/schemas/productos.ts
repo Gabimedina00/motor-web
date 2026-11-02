@@ -20,8 +20,22 @@ export const opcionesSchema = z
   .object({
     // "muestra" es el color del circulito; el nombre siempre se ve escrito al lado.
     // "talles" dentro de un color: los que hay en ese color (los demás se ven deshabilitados).
+    // "encuadre": al elegir el color, la foto se acerca a ese punto (x e y en % de la foto, zoom
+    // de 1 a 4). Sirve cuando una sola foto muestra todos los colores, por ejemplo varias cajas.
     colores: z
-      .array(z.object({ nombre: z.string().min(1), muestra: hex, talles: z.array(z.string().min(1)).min(1).optional() }).strict())
+      .array(
+        z
+          .object({
+            nombre: z.string().min(1),
+            muestra: hex,
+            talles: z.array(z.string().min(1)).min(1).optional(),
+            encuadre: z
+              .object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100), zoom: z.number().min(1).max(4) })
+              .strict()
+              .optional(),
+          })
+          .strict(),
+      )
       .min(1)
       .optional(),
     // Talles iguales para todo el producto (por ejemplo un combo con guantes).

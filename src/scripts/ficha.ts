@@ -40,6 +40,17 @@ function actualizarTalles(caja: HTMLElement) {
   });
 }
 
+// Foto con varios colores: se acerca al color elegido. Si se combinan colores, vuelve a mostrar todos.
+function encuadrar(card: HTMLElement, caja: HTMLElement) {
+  const marco = card.querySelector<HTMLElement>('.card__marco--encuadre');
+  if (!marco) return;
+  const color = combinando(caja) ? undefined : opcionesDe(caja).colores?.find((c) => c.nombre === marcado(caja, 'color'));
+  const e = color?.encuadre ?? { x: 50, y: 50, zoom: 1 };
+  marco.style.setProperty('--x', String(e.x));
+  marco.style.setProperty('--y', String(e.y));
+  marco.style.setProperty('--zoom', String(e.zoom));
+}
+
 // Pack mixto: cuántas lleva cada combinación, sin pasarse del total del pack.
 function actualizarMezcla(card: HTMLElement, caja: HTMLElement) {
   const total = varianteElegida(card).unidades ?? 1;
@@ -97,6 +108,7 @@ export function iniciarFichas() {
     if (!caja) return;
     if (campo.matches('[data-color]')) actualizarTalles(caja);
     if (campo.matches('[data-modo-opcion]')) mostrarModo(card, caja);
+    encuadrar(card, caja);
     mostrarError(caja, '');
   });
 

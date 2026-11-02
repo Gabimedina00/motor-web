@@ -43,3 +43,24 @@ Pendiente técnico:
   Cloudflare desde el 1/11, y se conecta al Worker `motor-web` como dominio propio (con y sin `www`).
 - Canónico, og:url, JSON-LD y la imagen para compartir salen de https://cromoinsumos.com.
 - El link del Worker, https://motor-web.gabrielmed1n400.workers.dev, sigue andando.
+
+## 2026-11-02 · Franja, fotos de guantes y pie
+
+Pedido de Gabriel:
+- **Verde de Cromo**: `#a8e436` (tomado de la muestra que pasó). Es el color de acento del sitio:
+  estrellas de la franja, etiquetas, palabra resaltada de la portada, links y contorno de foco.
+  Reemplaza al celeste `#8bd8ee`. Los botones siguen en violeta.
+- **Franja** ("Precios a la vista · Combos · Pedidos por WhatsApp"): estaba corrida a la izquierda
+  (la lista perdía el centrado). Ahora está centrada, con letras más gruesas y espaciadas, una luz
+  verde que recorre cada frase y estrellas que giran. En celular va una frase por renglón.
+  Con "menos movimiento" activado en el teléfono no se anima.
+- **Guantes por color**: al elegir un color, la foto de las cuatro cajas se acerca a la caja de ese
+  color (campo `encuadre` en cada color de productos.json). Si se combinan colores, vuelve a mostrar
+  todas. Si llegan fotos de cada caja por separado, conviene usarlas.
+- **Pie**: leyenda profesional, íconos de WhatsApp e Instagram, contacto con número, usuario y
+  dirección **Av. Ávalos 515, Resistencia, Chaco** con link a Google Maps, accesos a las secciones
+  y el nombre grande de cierre.
+
+Pendiente:
+- Fotos individuales de cada caja de guantes (rosa, celeste, negra y blanca).
+- Ahora hay dirección publicada: ver si el "Retiro coordinado" pasa a ser retiro en Av. Ávalos 515.

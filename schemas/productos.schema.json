@@ -95,6 +95,32 @@
                         "type": "string",
                         "minLength": 1
                       }
+                    },
+                    "encuadre": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "zoom": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 4
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y",
+                        "zoom"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [

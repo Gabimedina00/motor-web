@@ -31,13 +31,19 @@ const SIZES = {
           {g.items.map((p) => {
             const v = p.variantes[0];
             const sola = g.items.length === 1;
+            const img = p.foto ? foto(p.foto) : undefined;
+            // Si algún color tiene "encuadre", la foto se acerca a ese color al elegirlo (ver ficha.ts).
+            const conEncuadre = Boolean(img && p.opciones?.colores?.some((c) => c.encuadre));
+            const estiloMarco = [p.fondo && `--fondo: ${p.fondo}`, conEncuadre && `--proporcion: ${img!.width / img!.height}`]
+              .filter(Boolean)
+              .join('; ');
             return (
               <li class:list={['card', 'revelar', { 'card--sin-foto': !p.foto, 'card--ancha': sola }]} data-producto={p.id}>
-                {p.foto && (
-                  <div class="card__marco" style={p.fondo ? `--fondo: ${p.fondo}` : undefined}>
+                {img && (
+                  <div class:list={['card__marco', { 'card__marco--encuadre': conEncuadre }]} style={estiloMarco || undefined}>
                     <Image
                       class="card__foto"
-                      src={foto(p.foto)}
+                      src={img}
                       alt={p.alt!}
                       widths={[160, 320, 480, 720, 1100]}
                       sizes={sola ? SIZES.ancha : SIZES.normal}
@@ -135,6 +141,18 @@ const SIZES = {
     background: var(--fondo, var(--surface-raised));
   }
   .card__foto { width: 100%; height: 100%; object-fit: contain; }
+  /* Foto con varios colores: al elegir uno, la foto se acerca a ese color y lo deja en el centro.
+     --x, --y y --zoom los pone ficha.ts. Las cuentas usan el tamaño real de la foto dentro del marco
+     (cqw/cqh = ancho/alto del marco), así el encuadre es el mismo en celular y en escritorio. */
+  .card__marco--encuadre { container-type: size; }
+  .card__marco--encuadre .card__foto {
+    --ancho: min(100cqw, 100cqh * var(--proporcion));
+    --alto: calc(var(--ancho) / var(--proporcion));
+    transform: scale(var(--zoom, 1)) translate(calc((50 - var(--x, 50)) / 100 * var(--ancho)), calc((50 - var(--y, 50)) / 100 * var(--alto)));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card__marco--encuadre .card__foto { transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), scale 0.4s ease; }
+  }
   .card__cuerpo { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
   /* Si el nombre no entra junto a la etiqueta, la etiqueta baja: el nombre nunca queda en una columna finita. */
   .card__cabeza { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--s1) var(--s2); }
