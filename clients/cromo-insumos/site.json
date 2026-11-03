@@ -26,7 +26,7 @@
   },
   "marca": {
     "isotipo": { "foto": "emblema.png", "alt": "Emblema de Cromo Insumos" },
-    "lema": "Insumos para hacer",
+    "lema": "Insumos descartables de calidad profesional para estética, manicura, pestañas, tatuajes y odontología. Atención personalizada y envíos en Resistencia y alrededores.",
     "esquema": "oscuro",
     "tokens": {
       "brand": "#b6a2ff",
@@ -39,10 +39,10 @@
       "surfaceRaised": "#1e2129",
       "line": "#313745",
       "controlBorder": "#737e93",
-      "accent": "#8bd8ee",
+      "accent": "#a8e436",
       "accentInk": "#0e0f12",
-      "focus": "#8bd8ee",
-      "link": "#8bd8ee",
+      "focus": "#a8e436",
+      "link": "#a8e436",
       "promo": "#ffb26b",
       "promoInk": "#14121d",
       "error": "#ff9b9b",
@@ -52,7 +52,8 @@
   },
   "contacto": {
     "whatsapp": "5493624769874",
-    "instagram": "https://www.instagram.com/cromoinsumos/"
+    "instagram": "https://www.instagram.com/cromoinsumos/",
+    "direccion": "Av. Ávalos 515, Resistencia, Chaco"
   },
   "pedidos": {
     "mediosDePago": ["Transferencia", "Efectivo"],

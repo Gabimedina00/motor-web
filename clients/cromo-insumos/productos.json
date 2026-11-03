@@ -38,10 +38,10 @@
       "opciones": {
         "unidad": { "singular": "caja", "plural": "cajas" },
         "colores": [
-          { "nombre": "Rosa", "muestra": "#f06aa8", "talles": ["S", "M"] },
-          { "nombre": "Celeste", "muestra": "#6ec6ea", "talles": ["S", "M", "L"] },
-          { "nombre": "Negro", "muestra": "#111216", "talles": ["M", "L"] },
-          { "nombre": "Blanco", "muestra": "#f4f5f7", "talles": ["M"] }
+          { "nombre": "Rosa", "muestra": "#f06aa8", "talles": ["S", "M"], "encuadre": { "x": 20, "y": 47, "zoom": 1.9 } },
+          { "nombre": "Celeste", "muestra": "#6ec6ea", "talles": ["S", "M", "L"], "encuadre": { "x": 82, "y": 48, "zoom": 1.9 } },
+          { "nombre": "Negro", "muestra": "#111216", "talles": ["M", "L"], "encuadre": { "x": 48, "y": 61, "zoom": 1.8 } },
+          { "nombre": "Blanco", "muestra": "#f4f5f7", "talles": ["M"], "encuadre": { "x": 52, "y": 33, "zoom": 1.9 } }
         ]
       },
       "variantes": [

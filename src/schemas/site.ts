@@ -87,7 +87,7 @@ export const siteSchema = z
         logo: foto.optional(),
         // Solo el símbolo, sin el nombre: va al lado del nombre en el encabezado y como ícono de la pestaña.
         isotipo: foto.optional(),
-        // Frase corta de marca, por ejemplo "Insumos para hacer". Va en el pie.
+        // Leyenda de la marca para el pie: una o dos frases sobre qué vende y para quién.
         lema: z.string().optional(),
         // "oscuro": el fondo (surface) es oscuro y el texto (ink) claro. Ajusta los bloques que invierten colores.
         esquema: z.enum(['claro', 'oscuro']).default('claro'),
@@ -109,6 +109,10 @@ export const siteSchema = z
       instagram: z.url().optional(),
       facebook: z.url().optional(),
       tiktok: z.url().optional(),
+      // Dirección del local, por ejemplo "Av. Ávalos 515, Resistencia, Chaco". Va en el pie con un
+      // link a Google Maps. Si no se carga "mapa", el link se arma con la dirección.
+      direccion: z.string().min(1).optional(),
+      mapa: z.url().optional(),
     }),
     pedidos: z
       .object({
