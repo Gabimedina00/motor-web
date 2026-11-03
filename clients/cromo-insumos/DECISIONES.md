@@ -64,3 +64,9 @@ Pedido de Gabriel:
 Pendiente:
 - Fotos individuales de cada caja de guantes (rosa, celeste, negra y blanca).
 - Ahora hay dirección publicada: ver si el "Retiro coordinado" pasa a ser retiro en Av. Ávalos 515.
+
+## 2026-11-03 · Todo en verde
+
+- Pedido de Gabriel: todo lo violeta pasa al verde de Cromo `#a8e436` (botones, pedido, atajos de
+  categorías, chips elegidos). Texto sobre el verde: `#0e0f12`.
+- El contador del botón "Pedido" ahora es oscuro con número verde, para que se lea sobre el botón verde.
